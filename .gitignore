@@ -1,11 +1,12 @@
 ### Personal
-ipk-l4-scan
+**/ipk-l4-**
 sandbox/
 **/doc/*
 !**/doc/resources/
 **/raw/
 **/build/
 **/pack/
+**/test/bin/
 
 ### C++ template
 # Prerequisites
