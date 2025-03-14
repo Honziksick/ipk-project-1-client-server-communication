@@ -55,26 +55,23 @@ $(VERBOSE)SILENTOPT = -s
 # Definition of a constant to disable selected targets (for submission)
 #DISABLE_TARGETS ?= true
 
-###                                           ###
-#  Definition of paths for some inputs/outputs  #
-###                                           ###
 
-# Directory for generating documentation
-DOC_DIR = doc
-
-
-###                                                                    ###
-#  Declaration of paths to directories intended for project compilation  #
-###                                                                    ###
+###                   ###
+#  Definition of paths  #
+###                   ###
 
 # Path to the directory with source files for the compiler
 SRC_DIR = src
 
-# Path to the directory with tests
-TEST_DIR = test
-
 # Directories for placing built files
 BUILD_DIR = build
+
+# Path to the directory with tests
+TEST_DIR = test
+TEST_BIN_DIR = $(TEST_DIR)/bin
+
+# Directory for generating documentation
+DOC_DIR = doc
 
 # Directory with the prepared project for packaging
 PACK_DIR = pack
@@ -97,17 +94,18 @@ all: build
 
 ### MC # build: # Builds the compiler for the "Team xkalinj00"
 build:
-	@$(MAKE) clean-build
-	@$(MAKE) clean-exec
-	@cmake -S . -B build
-	@cmake --build build
+	@cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+	@cmake --build build --config Release --target ipk-l4-scan
 
 ### MC # run: Runs the executable with print help argument
-run: build
+run:
+	@if [ ! -f "$(EXECUTABLE)" ]; then \
+		$(MAKE) build; \
+	fi
 	./$(EXECUTABLE) -h
 
 # Definition of shortcuts for command categories
-CATEGORIES := MC C P DEV
+CATEGORIES := MC C T P DEV
 
 ### MC # help: # Prints help for using the Makefile
 help:
@@ -118,6 +116,7 @@ endif
 	for CATEGORY in $(CATEGORIES); do \
 		case $$CATEGORY in \
 		"MC") FULL_CAT="Main Commands";; \
+		"T") FULL_CAT="Test";; \
 		"C") FULL_CAT="Clean (special)";; \
 		"P") FULL_CAT="Pack (special)";; \
 		"DEV") FULL_CAT="Install Dependencies";; \
@@ -142,7 +141,7 @@ endif
 ifndef DISABLE_TARGETS
 clean: clean-all
 else
-clean: clean-build clean-doc
+clean: clean-build clean-test clean-doc
 endif
 
 ### MC # doc: # Generates project documentation into the `doc` directory
@@ -191,7 +190,7 @@ endif
 ################################################################################
 
 ### C # clean-all: # Removes all created files (build, doc, executable, archive, ...)
-clean-all: clean-build clean-doc clean-pack
+clean-all: clean-build clean-exec clean-test clean-doc clean-pack
 
 ### C # clean-build: # Removes the 'build' directory
 clean-build:
@@ -200,6 +199,10 @@ clean-build:
 ### C # clean-exec: # Removes the executable
 clean-exec:
 	rm -f $(EXECUTABLE)
+
+### C # clean-test: # Removes 'test/bin' folder with test executables
+clean-test:
+	rm -rf $(TEST_BIN_DIR)
 
 ### C # clean-doc: # Removes generated content of the 'doc' directory
 ifndef DISABLE_TARGETS
@@ -218,6 +221,25 @@ else
 clean-pack:
 	@echo "$(COLOR_RED)The 'clean-pack' target is disabled for project submission.$(COLOR_RESET)"
 endif
+
+
+################################################################################
+#                                                                              #
+#                               'TEST' COMMANDS                                #
+#                                                                              #
+################################################################################
+
+### T # test-exceptions: # Builds and runs the 'OmegaExceptions' test
+test-exceptions:
+	@cmake -S . -B build -DCMAKE_BUILD_TYPE=Test
+	@cmake --build build --config Test --target OmegaExceptionsTest
+	./$(TEST_BIN_DIR)/OmegaExceptionsTest
+
+### T # test-error-handler: # Builds and runs the 'ErrorHandler' test
+test-error-handler:
+	@cmake -S . -B build -DCMAKE_BUILD_TYPE=Test
+	@cmake --build build --config Test --target ErrorHandlerTest
+	./$(TEST_BIN_DIR)/ErrorHandlerTest
 
 
 ################################################################################
@@ -352,3 +374,5 @@ else
 update-dep:
 	@echo "$(COLOR_RED)The 'dev-update-dep' target is disabled for project submission.$(COLOR_RESET)"
 endif
+
+### end of file Makefile ###
