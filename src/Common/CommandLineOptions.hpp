@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      14.03.2025                                                    *
- * Last edit:    15.03.2025                                                    *
+ * Last edit:    20.03.2025                                                    *
  *                                                                             *
  * Description:  Declaration of the CommandLineOptions class, which is         *
  *               responsible for handling command line options for the         *
@@ -38,7 +38,7 @@ namespace OmegaL4Scanner::Common
         /**
          * @brief Default constructor for CommandLineOptions class.
          */
-        CommandLineOptions();
+        explicit CommandLineOptions();
 
         std::string mInterfaceName;             /**< Name of the network interface.                 */
         std::vector<PortRange> mTcpPorts;       /**< List of TCP ports to scan.                     */

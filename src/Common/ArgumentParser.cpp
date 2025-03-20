@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      14.03.2025                                                    *
- * Last edit:    19.03.2025                                                    *
+ * Last edit:    20.03.2025                                                    *
  *                                                                             *
  * Description:  Implementation of the ArgumentParser class, which is       *
  *               responsible for parsing command line arguments and options.   *
@@ -61,9 +61,9 @@ namespace OmegaL4Scanner::Common
             }
             else {
                 throw InternalErrorException(
-                                             "CLI11 library returned error while parsing "
-                                             "command line arguments: " + string(e.what())
-                                            );
+                        "CLI11 library returned error while parsing "
+                        "command line arguments: " + string(e.what())
+                        );
             }
         }
         catch(const CLI::Error &e) {
@@ -95,8 +95,8 @@ namespace OmegaL4Scanner::Common
     } // ArgumentParser::parseArguments()
 
     void ArgumentParser::setupCliApp(CLI::App &app, CommandLineOptions &options,
-                                        string &tcpPorts, string &udpPorts,
-                                        int &timeout) {
+                                     string &tcpPorts, string &udpPorts,
+                                     int &timeout) {
         app.set_help_flag("-h,--help", "Display help message");
 
         const auto interfaceOpt =
@@ -142,15 +142,15 @@ namespace OmegaL4Scanner::Common
         // the interface must also be specified.
         if(!validateInterfaceName(options.mInterfaceName)) {
             throw InvalidArgumentException(
-                                           "Invalid network interface specified: " + options.mInterfaceName
-                                          );
+                    "Invalid network interface specified: " + options.mInterfaceName
+                    );
         }
 
         // If the target is specified, at least one of the ports (TCP/UDP) must be provided.
         if(options.mTcpPorts.empty() && options.mUdpPorts.empty()) {
             throw InvalidArgumentException(
-                                           "Target provided but no port ranges specified for scanning."
-                                          );
+                    "Target provided but no port ranges specified for scanning."
+                    );
         }
 
         // Check if the given hostname or IP address is valid
@@ -249,7 +249,8 @@ namespace OmegaL4Scanner::Common
         // Regular expression for validating IPv6 addresses
         // Source: https://ihateregex.io/expr/ipv6/
         const regex
-                ipv6Regex(R"(^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$)");
+                ipv6Regex(
+                        R"(^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$)");
 
         // Regular expression for validating localhost
         const regex

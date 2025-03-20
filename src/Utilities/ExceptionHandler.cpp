@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      13.03.2025                                                    *
- * Last edit:    13.03.2025                                                    *
+ * Last edit:    20.03.2025                                                    *
  *                                                                             *
  * Description:  Implementation of the ExceptionHandler class, which is        *
  *               responsible for printing error messages.                      *
@@ -53,7 +53,7 @@ namespace OmegaL4Scanner::Exceptions
 
     void ExceptionHandler::printError(const OmegaBaseException &exception) {
         cerr << COLOR_RED << "Error " << exception.code() << ": " << exception.what() << COLOR_RESET << endl;
-        if (!exception.detail().empty()){
+        if(!exception.detail().empty()) {
             cerr << COLOR_YELLOW << "Detail: " << exception.detail() << COLOR_RESET << endl;
         }
     } // printError()

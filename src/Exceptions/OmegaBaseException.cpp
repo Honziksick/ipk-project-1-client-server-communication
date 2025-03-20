@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      12.03.2025                                                    *
- * Last edit:    13.03.2025                                                    *
+ * Last edit:    20.03.2025                                                    *
  *                                                                             *
  * Description:  Implementation file for the OmegaBaseException class used in  *
  *               the OMEGA L4 Scanner project.                                 *
@@ -21,13 +21,14 @@
  */
 
 #include "Exceptions/OmegaBaseException.hpp"
+#include <utility>  // std::move
 
 using namespace std;
 
 namespace OmegaL4Scanner::Exceptions
 {
-    OmegaBaseException::OmegaBaseException(const Enums::ExitCodes code, string message, string detail) :
-        mCode{code}, mMessage{move(message)}, mDetail{move(detail)} {}
+    OmegaBaseException::OmegaBaseException(const Enums::ExitCodes code, string message, string detail)
+        : mCode{code}, mMessage{move(message)}, mDetail{move(detail)} {}
 
     const char *OmegaBaseException::what() const noexcept {
         return mMessage.c_str();
