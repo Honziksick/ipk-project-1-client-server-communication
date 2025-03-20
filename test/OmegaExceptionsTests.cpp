@@ -31,6 +31,28 @@ using namespace OmegaL4Scanner::Enums;
 using namespace testing;
 using namespace std;
 
+TEST(OmegaExceptionsTests, ThrowHelpRequestedException) {
+    try {
+        throw HelpRequestedException("Help me please, good sir.");
+    }
+    catch(HelpRequestedException &e) {
+        EXPECT_EQ(e.code(), static_cast<int>(ExitCodes::HELP_REQUESTED));
+        EXPECT_STREQ(e.what(), helpRequestedMsg);
+        EXPECT_STREQ(e.detail().c_str(), "Help me please, good sir.");
+    }
+}
+
+TEST(OmegaExceptionsTests, ThrowInterfaceReqestedException) {
+    try {
+        throw InterfacePrintRequestedException("This is a request for printing interfaces.");
+    }
+    catch(InterfacePrintRequestedException &e) {
+        EXPECT_EQ(e.code(), static_cast<int>(ExitCodes::INTERFACE_PRINT_REQUESTED));
+        EXPECT_STREQ(e.what(), interfacePrintRequestedMsg);
+        EXPECT_STREQ(e.detail().c_str(), "This is a request for printing interfaces.");
+    }
+}
+
 TEST(OmegaExceptionsTests, ThrowInvalidArgumentException) {
     try {
         throw InvalidArgumentException("This is an invalid argument detail.");

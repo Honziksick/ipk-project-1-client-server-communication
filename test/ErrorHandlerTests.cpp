@@ -34,6 +34,24 @@ using namespace OmegaL4Scanner::Enums;
 using namespace testing;
 using namespace std;
 
+TEST(ErrorHandlerTests, HandleHelpRequestedException) {
+    try {
+        throw HelpRequestedException("Help me please, good sir.");
+    }
+    catch(const exception &e) {
+        EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::HELP_REQUESTED)), "");
+    }
+}
+
+TEST(ErrorHandlerTests, HandleInterfacePrintRequestedException) {
+    try {
+        throw InterfacePrintRequestedException("This is a request for printing interfaces.");
+    }
+    catch(const exception &e) {
+        EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::INTERFACE_PRINT_REQUESTED)), "");
+    }
+}
+
 TEST(ErrorHandlerTests, HandleInvalidArgumentException) {
     try {
         throw InvalidArgumentException("This is an invalid argument detail.");
@@ -103,6 +121,15 @@ TEST(ErrorHandlerTests, HandleInternalErrorException) {
     }
     catch(const exception &e) {
         EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::INTERNAL_ERROR)), "");
+    }
+}
+
+TEST(ErrorHandlerTests, HandleUnknownException) {
+    try {
+        throw runtime_error("This was a runtime error.");
+    }
+    catch(const exception &e) {
+        EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::UNKNOWN_ERROR)), "");
     }
 }
 
