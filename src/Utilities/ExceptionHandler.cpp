@@ -4,29 +4,27 @@
  * University:   Faculty of Information Technology, BUT                        *
  * Subject:      IPK: Computer Communications and Networks                     *
  *                                                                             *
- * File:         ErrorHandler.cpp                                              *
+ * File:         ExceptionHandler.cpp                                          *
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      13.03.2025                                                    *
  * Last edit:    13.03.2025                                                    *
  *                                                                             *
- * Description:  Implementation of the ErrorHandler class, which is            *
+ * Description:  Implementation of the ExceptionHandler class, which is        *
  *               responsible for printing error messages.                      *
  *                                                                             *
  ******************************************************************************/
 /**
- * @file ErrorHandler.cpp
+ * @file ExceptionHandler.cpp
  * @author Jan Kalina \<xkalinj00>
- * @brief Implementation file for the ErrorHandler class.
+ * @brief Implementation file for the ExceptionHandler class.
  */
 
-#include "ErrorHandler.hpp"
-#include "OmegaBaseException.hpp"
-#include <exception> // exception
-#include <iostream>  // cerr
-#include <string>    // string
-
-#include "OmegaExceptions.hpp"
+#include "Utilities/ExceptionHandler.hpp"
+#include "Exceptions/OmegaExceptions.hpp"
+#include <exception> // std::exception
+#include <iostream>  // std::cerr
+#include <string>    // std::string
 
 using namespace std;
 
@@ -34,9 +32,9 @@ const string COLOR_RESET  = "\033[0m";    /**< ANSI escape code for resetting th
 const string COLOR_YELLOW = "\033[0;33m"; /**< ANSI escape code for yellow color.        */
 const string COLOR_RED    = "\033[0;31m"; /**< ANSI escape code for red color.           */
 
-namespace OmegaL4Scanner::Errors
+namespace OmegaL4Scanner::Exceptions
 {
-    void ErrorHandler::handleError(const exception &exception) {
+    void ExceptionHandler::handleError(const exception &exception) {
         // Attempt to cast the original exception to OmegaBaseException
         const OmegaBaseException *pOmegaException = getOmegaException(exception);
 
@@ -53,20 +51,20 @@ namespace OmegaL4Scanner::Errors
         terminateProgram(pOmegaException->code());
     } // handleError()
 
-    void ErrorHandler::printError(const OmegaBaseException &exception) {
+    void ExceptionHandler::printError(const OmegaBaseException &exception) {
         cerr << COLOR_RED << "Error " << exception.code() << ": " << exception.what() << COLOR_RESET << endl;
         if (!exception.detail().empty()){
             cerr << COLOR_YELLOW << "Detail: " << exception.detail() << COLOR_RESET << endl;
         }
     } // printError()
 
-    void ErrorHandler::terminateProgram(const int errorCode) {
+    void ExceptionHandler::terminateProgram(const int errorCode) {
         exit(errorCode);
     } // terminateProgram()
 
-    const OmegaBaseException *ErrorHandler::getOmegaException(const exception &exception) {
+    const OmegaBaseException *ExceptionHandler::getOmegaException(const exception &exception) {
         return dynamic_cast<const OmegaBaseException*>(&exception);
     } // getOmegaException()
-} // OmegaL4Scanner::Errors
+} // OmegaL4Scanner::Exceptions
 
-/*** end of file ErrorHandler.cpp ***/
+/*** end of file ExceptionHandler.cpp ***/

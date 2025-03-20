@@ -23,11 +23,11 @@
 #ifndef OMEGA_BASE_EXCEPTION_HPP
 #define OMEGA_BASE_EXCEPTION_HPP
 
-#include "Enums/ErrorCode.hpp"
+#include "Enums/ExitCodes.hpp"
 #include <exception> // std::exception
 #include <string>    // std::string
 
-namespace OmegaL4Scanner::Errors
+namespace OmegaL4Scanner::Exceptions
 {
     /**
      * @class OmegaBaseException
@@ -41,7 +41,7 @@ namespace OmegaL4Scanner::Errors
          * @param message The error message.
          * @param detail Additional details about the error.
          */
-        OmegaBaseException(Enums::ErrorCode code, std::string message, std::string detail = "");
+        OmegaBaseException(Enums::ExitCodes code, std::string message, std::string detail = "");
 
         /**
          * @brief Returns the error message.
@@ -65,11 +65,11 @@ namespace OmegaL4Scanner::Errors
         std::string detail() const noexcept;
 
     private:
-        const Enums::ErrorCode mCode; /**< The error code.                     */
+        const Enums::ExitCodes mCode; /**< The error code.                     */
         const std::string mMessage;   /**< The error message.                  */
         std::string mDetail;          /**< Additional details about the error. */
     }; // OmegaBaseException
-} // OmegaL4Scanner::Errors
+} // OmegaL4Scanner::Exceptions
 
 #endif // OMEGA_BASE_EXCEPTION_HPP
 

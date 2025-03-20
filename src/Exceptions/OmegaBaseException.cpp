@@ -20,13 +20,13 @@
  * @brief Implementation file for the OmegaBaseException class.
  */
 
-#include "OmegaBaseException.hpp"
+#include "Exceptions/OmegaBaseException.hpp"
 
 using namespace std;
 
-namespace OmegaL4Scanner::Errors
+namespace OmegaL4Scanner::Exceptions
 {
-    OmegaBaseException::OmegaBaseException(const Enums::ErrorCode code, string message, string detail) :
+    OmegaBaseException::OmegaBaseException(const Enums::ExitCodes code, string message, string detail) :
         mCode{code}, mMessage{move(message)}, mDetail{move(detail)} {}
 
     const char *OmegaBaseException::what() const noexcept {
@@ -40,6 +40,6 @@ namespace OmegaL4Scanner::Errors
     string OmegaBaseException::detail() const noexcept {
         return mDetail;
     } // OmegaBaseException::detail()
-} // OmegaL4Scanner::Errors
+} // OmegaL4Scanner::Exceptions
 
 /*** end of file OmegaBaseException.cpp ***/

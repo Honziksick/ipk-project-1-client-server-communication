@@ -4,35 +4,35 @@
  * University:   Faculty of Information Technology, BUT                        *
  * Subject:      IPK: Computer Communications and Networks                     *
  *                                                                             *
- * File:         ErrorHandler.hpp                                              *
+ * File:         ExceptionHandler.hpp                                          *
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      13.03.2025                                                    *
  * Last edit:    13.03.2025                                                    *
  *                                                                             *
- * Description:  Declaration of the ErrorHandler class, which is               *
+ * Description:  Declaration of the ExceptionHandler class, which is           *
  *               responsible for printing error messages.                      *
  *                                                                             *
  ******************************************************************************/
 /**
- * @file ErrorHandler.hpp
+ * @file ExceptionHandler.hpp
  * @author Jan Kalina \<xkalinj00>
- * @brief Header file for the ErrorHandler class.
+ * @brief Header file for the ExceptionHandler class.
  */
 
-#ifndef ERROR_HANDLER_HPP
-#define ERROR_HANDLER_HPP
+#ifndef EXCEPTION_HANDLER_HPP
+#define EXCEPTION_HANDLER_HPP
 
-#include "OmegaBaseException.hpp"
+#include "Exceptions/OmegaBaseException.hpp"
 #include <exception> // std::exception
 
-namespace OmegaL4Scanner::Errors
+namespace OmegaL4Scanner::Exceptions
 {
     /**
-     * @class ErrorHandler
+     * @class ExceptionHandler
      * @brief Class responsible for handling and printing error messages.
      */
-    class ErrorHandler {
+    class ExceptionHandler {
     public:
         /**
          * @brief Handles the given exception by printing the error message
@@ -67,9 +67,9 @@ namespace OmegaL4Scanner::Errors
          *         nullptr otherwise.
          */
         static const OmegaBaseException *getOmegaException(const std::exception &exception);
-    }; // ErrorHandler
-} // OmegaL4Scanner::Errors
+    }; // ExceptionHandler
+} // OmegaL4Scanner::Exceptions
 
-#endif // ERROR_HANDLER_HPP
+#endif // EXCEPTION_HANDLER_HPP
 
-/*** end of file ErrorHandler.hpp ***/
+/*** end of file ExceptionHandler.hpp ***/
