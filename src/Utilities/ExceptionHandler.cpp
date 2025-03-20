@@ -22,15 +22,13 @@
 
 #include "Utilities/ExceptionHandler.hpp"
 #include "Exceptions/OmegaExceptions.hpp"
+#include "Constants/ColorEscapeSequences.hpp"
 #include <exception> // std::exception
 #include <iostream>  // std::cerr
 #include <string>    // std::string
 
 using namespace std;
-
-const string COLOR_RESET  = "\033[0m";    /**< ANSI escape code for resetting the color. */
-const string COLOR_YELLOW = "\033[0;33m"; /**< ANSI escape code for yellow color.        */
-const string COLOR_RED    = "\033[0;31m"; /**< ANSI escape code for red color.           */
+using namespace OmegaL4Scanner::Constants;
 
 namespace OmegaL4Scanner::Exceptions
 {
@@ -52,9 +50,9 @@ namespace OmegaL4Scanner::Exceptions
     } // handleError()
 
     void ExceptionHandler::printError(const OmegaBaseException &exception) {
-        cerr << COLOR_RED << "Error " << exception.code() << ": " << exception.what() << COLOR_RESET << endl;
+        cerr << COLOR_RED << "Error " << exception.code() << ": " << exception.what() << RESET << endl;
         if(!exception.detail().empty()) {
-            cerr << COLOR_YELLOW << "Detail: " << exception.detail() << COLOR_RESET << endl;
+            cerr << COLOR_YELLOW << "Detail: " << exception.detail() << RESET << endl;
         }
     } // printError()
 
