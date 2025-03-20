@@ -8,7 +8,7 @@
 # Author:       Jan Kalina <xkalinj00>                                         #
 #                                                                              #
 # Created:      12.03.2025                                                     #
-# Last edit:    13.03.2025                                                     #
+# Last edit:    20.03.2025                                                     #
 #                                                                              #
 # Description:  This file contains the CMake configuration for the OMEGA L4    #
 #               Scanner project. It sets up the project, specifies the C++20   #
@@ -127,7 +127,10 @@ foreach(TEST_SOURCE ${TEST_SOURCES})
                           gtest
                           gtest_main
                           )
-    # Set the output directory for the test binaries
+    target_link_options(${TEST_NAME} PRIVATE
+                        -Wl,--wrap=getifaddrs
+                        -Wl,--wrap=freeifaddrs
+                        )
     set_target_properties(${TEST_NAME} PROPERTIES
                           RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/bin"
                           )
@@ -145,7 +148,10 @@ target_link_libraries(ipk-l4-tests
                       gtest
                       gtest_main
                       )
-# Set the output directory for the combined test binary
+target_link_options(ipk-l4-tests PRIVATE
+                    -Wl,--wrap=getifaddrs
+                    -Wl,--wrap=freeifaddrs
+                    )
 set_target_properties(ipk-l4-tests PROPERTIES
                       RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/bin"
                       )
