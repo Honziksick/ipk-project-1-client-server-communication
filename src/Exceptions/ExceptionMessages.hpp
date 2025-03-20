@@ -4,27 +4,37 @@
  * University:   Faculty of Information Technology, BUT                        *
  * Subject:      IPK: Computer Communications and Networks                     *
  *                                                                             *
- * File:         ErrorMessage.hpp                                              *
+ * File:         ExceptionMessages.hpp                                         *
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      12.03.2025                                                    *
- * Last edit:    13.03.2025                                                    *
+ * Last edit:    19.03.2025                                                    *
  *                                                                             *
- * Description:  This file contains constant error messages used in the        *
+ * Description:  This file contains constant exception messages used in the    *
  *               Omega L4 Scanner project.                                     *
  *                                                                             *
  ******************************************************************************/
 /**
- * @file ErrorMessage.hpp
+ * @file ExceptionMessages.hpp
  * @author Jan Kalina \<xkalinj00>
- * @brief Constant error messages for the Omega L4 Scanner project.
+ * @brief Constant exception messages for the Omega L4 Scanner project.
  */
 
-#ifndef ERROR_MESSAGE_HPP
-#define ERROR_MESSAGE_HPP
+#ifndef EXCEPTION_MESSAGES_HPP
+#define EXCEPTION_MESSAGES_HPP
 
-namespace OmegaL4Scanner::Errors
+namespace OmegaL4Scanner::Exceptions
 {
+    /**
+     * @brief Message indicating that the user requested help.
+     */
+    inline auto helpRequestedMsg = "User requested help.";
+
+    /**
+     * @brief Message indicating that the user requested to print interfaces.
+     */
+    inline auto interfacePrintRequestedMsg = "User requested the print of interfaces.";
+
     /**
      * @brief Error message for invalid argument.
      */
@@ -64,8 +74,8 @@ namespace OmegaL4Scanner::Errors
      * @brief Error message for internal error.
      */
     inline auto internalErrMsg = "Internal error occurred.";
-} // OmegaL4Scanner::Errors
+} // OmegaL4Scanner::Exceptions
 
-#endif // ERROR_MESSAGE_HPP
+#endif // EXCEPTION_MESSAGES_HPP
 
-/*** end of file ErrorMessages.hpp ***/
+/*** end of file ExceptionMessages.hpp ***/

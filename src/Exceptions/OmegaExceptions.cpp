@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      12.03.2025                                                    *
- * Last edit:    13.03.2025                                                    *
+ * Last edit:    19.03.2025                                                    *
  *                                                                             *
  * Description:  Implementation file for the OmegaBaseException class used in  *
  *               the OMEGA L4 Scanner project.                                 *
@@ -20,77 +20,91 @@
  * @brief Implementation file for the OmegaExceptions classes.
  */
 
-#include "Errors/OmegaExceptions.hpp"
-#include "Errors/ErrorMessage.hpp"
-#include "Enums/ErrorCode.hpp"
+#include "Exceptions/OmegaExceptions.hpp"
+#include "Exceptions/ExceptionMessages.hpp"
+#include "Enums/ExitCodes.hpp"
 
 using namespace OmegaL4Scanner::Enums;
 using namespace std;
 
-namespace OmegaL4Scanner::Errors
+namespace OmegaL4Scanner::Exceptions
 {
+    HelpRequestedException::HelpRequestedException(string detail) :
+        OmegaBaseException{
+            ExitCodes::HELP_REQUESTED,
+            helpRequestedMsg,
+            move(detail)
+        } {}
+
+    InerfacePrintRequestedException::InerfacePrintRequestedException(string detail) :
+        OmegaBaseException{
+            ExitCodes::INTERFACE_PRINT_REQUESTED,
+            helpRequestedMsg,
+            move(detail)
+        } {}
+
     InvalidArgumentException::InvalidArgumentException(string detail) :
         OmegaBaseException{
-            ErrorCode::INVALID_ARGUMENT_ERROR,
+            ExitCodes::INVALID_ARGUMENT_ERROR,
             invalidArgumentErrMsg,
             move(detail)
         } {}
 
     InvalidInterfaceException::InvalidInterfaceException(string detail) :
         OmegaBaseException{
-            ErrorCode::INVALID_INTERFACE_ERROR,
+            ExitCodes::INVALID_INTERFACE_ERROR,
             invalidInterfaceErrMsg,
             move(detail)
         } {}
 
     InvalidPortRangeException::InvalidPortRangeException(string detail) :
         OmegaBaseException{
-            ErrorCode::INVALID_PORT_RANGE_ERROR,
+            ExitCodes::INVALID_PORT_RANGE_ERROR,
             invalidPortRangeErrMsg,
             move(detail)
         } {}
 
     HostnameException::HostnameException(string detail) :
         OmegaBaseException{
-            ErrorCode::INVALID_HOSTNAME_ERROR,
+            ExitCodes::INVALID_HOSTNAME_ERROR,
             invalidHostnameErrMsg,
             move(detail)
         } {}
 
     SocketException::SocketException(string detail) :
         OmegaBaseException{
-            ErrorCode::SOCKET_ERROR,
+            ExitCodes::SOCKET_ERROR,
             socketErrMsg,
             move(detail)
         } {}
 
     PcapException::PcapException(string detail) :
         OmegaBaseException{
-            ErrorCode::PCAP_ERROR,
+            ExitCodes::PCAP_ERROR,
             pcapErrMsg,
             move(detail)
         } {}
 
     UserInterruptionException::UserInterruptionException(string detail) :
         OmegaBaseException{
-            ErrorCode::USER_INTERRUPTION_ERROR,
+            ExitCodes::USER_INTERRUPTION_ERROR,
             userInterruptionErrMsg,
             move(detail)
         } {}
 
     InternalErrorException::InternalErrorException(string detail) :
         OmegaBaseException{
-            ErrorCode::INTERNAL_ERROR,
+            ExitCodes::INTERNAL_ERROR,
             internalErrMsg,
             move(detail)
         } {}
 
     UknownErrorException::UknownErrorException(const char *message, string detail) :
-    OmegaBaseException{
-        ErrorCode::UNKNOWN_ERROR,
-        message,
-        move(detail)
-    } {}
-} // OmegaL4Scanner::Errors
+        OmegaBaseException{
+            ExitCodes::UNKNOWN_ERROR,
+            message,
+            move(detail)
+        } {}
+} // OmegaL4Scanner::Exceptions
 
 /*** end of file OmegaExceptions.cpp ***/
