@@ -23,7 +23,7 @@
 #ifndef EXCEPTION_MESSAGES_HPP
 #define EXCEPTION_MESSAGES_HPP
 
-namespace OmegaL4Scanner::Exceptions
+namespace OmegaL4Scanner::Constants
 {
     /**
      * @brief Message indicating that the user requested help.
@@ -74,7 +74,7 @@ namespace OmegaL4Scanner::Exceptions
      * @brief Error message for internal error.
      */
     inline auto internalErrMsg = "Internal error occurred.";
-} // OmegaL4Scanner::Exceptions
+} // OmegaL4Scanner::Constants
 
 #endif // EXCEPTION_MESSAGES_HPP
 

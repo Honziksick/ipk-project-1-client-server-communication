@@ -21,9 +21,10 @@
  */
 
 #include "Exceptions/OmegaExceptions.hpp"
-#include "Exceptions/ExceptionMessages.hpp"
+#include "Constants/ExceptionMessages.hpp"
 #include "Enums/ExitCodes.hpp"
 
+using namespace OmegaL4Scanner::Constants;
 using namespace OmegaL4Scanner::Enums;
 using namespace std;
 

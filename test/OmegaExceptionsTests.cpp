@@ -22,11 +22,12 @@
 
 #include "Exceptions/OmegaExceptions.hpp"
 #include "Utilities/ExceptionHandler.hpp"
-#include "Exceptions/ExceptionMessages.hpp"
+#include "Constants/ExceptionMessages.hpp"
 #include "Enums/ExitCodes.hpp"
 #include <gtest/gtest.h>
 
 using namespace OmegaL4Scanner::Exceptions;
+using namespace OmegaL4Scanner::Constants;
 using namespace OmegaL4Scanner::Enums;
 using namespace testing;
 using namespace std;
@@ -147,8 +148,7 @@ TEST(OmegaExceptionsTests, ThrowUknownErrorException) {
     }
     catch(std::exception &badAllocException) {
         try {
-            UknownErrorException unknownException{badAllocException.what()};
-            throw unknownException;
+            throw UknownErrorException(badAllocException.what());
         }
         catch(UknownErrorException &e) {
             EXPECT_EQ(e.code(), static_cast<int>(ExitCodes::UNKNOWN_ERROR));
