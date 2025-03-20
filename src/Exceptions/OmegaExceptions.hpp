@@ -41,16 +41,16 @@ namespace OmegaL4Scanner::Exceptions
     }; // HelpRequestedException
 
     /**
-     * @class InerfacePrintRequestedException
+     * @class InterfacePrintRequestedException
      * @brief Thrown when interfaces are requested to be printed.
      */
-    class InerfacePrintRequestedException final : public OmegaBaseException {
+    class InterfacePrintRequestedException final : public OmegaBaseException {
     public:
         /**
-         * @brief Constructor for InerfacePrintRequestedException.
+         * @brief Constructor for InterfacePrintRequestedException.
          */
-        explicit InerfacePrintRequestedException(std::string detail = "");
-    }; // InerfacePrintRequestedException
+        explicit InterfacePrintRequestedException(std::string detail = "");
+    }; // InterfacePrintRequestedException
 
     /**
      * @class InvalidArgumentException

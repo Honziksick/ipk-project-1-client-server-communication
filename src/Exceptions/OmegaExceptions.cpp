@@ -36,10 +36,10 @@ namespace OmegaL4Scanner::Exceptions
             move(detail)
         } {}
 
-    InerfacePrintRequestedException::InerfacePrintRequestedException(string detail) :
+    InterfacePrintRequestedException::InterfacePrintRequestedException(string detail) :
         OmegaBaseException{
             ExitCodes::INTERFACE_PRINT_REQUESTED,
-            helpRequestedMsg,
+            interfacePrintRequestedMsg,
             move(detail)
         } {}
 
