@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      12.03.2025                                                    *
- * Last edit:    19.03.2025                                                    *
+ * Last edit:    20.03.2025                                                    *
  *                                                                             *
  * Description:  This file contains constant exception messages used in the    *
  *               Omega L4 Scanner project.                                     *
@@ -38,42 +38,37 @@ namespace OmegaL4Scanner::Constants
     /**
      * @brief Error message for invalid argument.
      */
-    inline auto invalidArgumentErrMsg = "Invalid argument provided.";
+    inline auto invalidArgumentErrorMsg = "Invalid argument provided.";
 
     /**
      * @brief Error message for invalid interface.
      */
-    inline auto invalidInterfaceErrMsg = "Invalid interface provided.";
-
-    /**
-     * @brief Error message for invalid port range.
-     */
-    inline auto invalidPortRangeErrMsg = "Invalid port range provided.";
-
-    /**
-     * @brief Error message for invalid hostname.
-     */
-    inline auto invalidHostnameErrMsg = "Invalid hostname entered.";
+    inline auto interfaceErrorMsg = "Invalid interface provided.";
 
     /**
      * @brief Error message for socket error.
      */
-    inline auto socketErrMsg = "Socket error occurred.";
+    inline auto socketErrorMsg = "Socket error occurred.";
 
     /**
      * @brief Error message for pcap error.
      */
-    inline auto pcapErrMsg = "Pcap error occurred.";
+    inline auto pcapErrorMsg = "Pcap error occurred.";
 
     /**
      * @brief Error message for user interruption.
      */
-    inline auto userInterruptionErrMsg = "Operation was interrupted.";
+    inline auto userInterruptionMsg = "Operation was interrupted.";
 
     /**
      * @brief Error message for internal error.
      */
-    inline auto internalErrMsg = "Internal error occurred.";
+    inline auto internalErrorMsg = "Internal error occurred.";
+
+    /**
+     * @brief Error message for unknown error.
+     */
+    inline auto unknownErrorMsg = "An unexpected unknown error occurred. Please report this issue to the developers.";
 } // OmegaL4Scanner::Constants
 
 #endif // EXCEPTION_MESSAGES_HPP

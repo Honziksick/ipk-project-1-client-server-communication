@@ -63,34 +63,16 @@ TEST(ErrorHandlerTests, HandleInvalidArgumentException) {
 
 TEST(ErrorHandlerTests, HandleInvalidInterfaceException) {
     try {
-        throw InvalidInterfaceException("This is an invalid interface detail.");
+        throw InterfaceErrorException("This is an invalid interface detail.");
     }
     catch(const exception &e) {
-        EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::INVALID_INTERFACE_ERROR)), "");
-    }
-}
-
-TEST(ErrorHandlerTests, HandleInvalidPortRangeException) {
-    try {
-        throw InvalidPortRangeException("This is an invalid port range detail.");
-    }
-    catch(const exception &e) {
-        EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::INVALID_PORT_RANGE_ERROR)), "");
-    }
-}
-
-TEST(ErrorHandlerTests, HandleHostnameException) {
-    try {
-        throw HostnameException("This is an invalid hostname detail.");
-    }
-    catch(const exception &e) {
-        EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::INVALID_HOSTNAME_ERROR)), "");
+        EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::INTERFACE_ERROR)), "");
     }
 }
 
 TEST(ErrorHandlerTests, HandleSocketException) {
     try {
-        throw SocketException("This is a socket error detail.");
+        throw SocketErrorException("This is a socket error detail.");
     }
     catch(const exception &e) {
         EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::SOCKET_ERROR)), "");
@@ -99,7 +81,7 @@ TEST(ErrorHandlerTests, HandleSocketException) {
 
 TEST(ErrorHandlerTests, HandlePcapException) {
     try {
-        throw PcapException("This is a Pcap error detail.");
+        throw PcapErrorException("This is a Pcap error detail.");
     }
     catch(const exception &e) {
         EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::PCAP_ERROR)), "");

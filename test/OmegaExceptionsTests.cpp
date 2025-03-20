@@ -60,62 +60,40 @@ TEST(OmegaExceptionsTests, ThrowInvalidArgumentException) {
     }
     catch(InvalidArgumentException &e) {
         EXPECT_EQ(e.code(), static_cast<int>(ExitCodes::INVALID_ARGUMENT_ERROR));
-        EXPECT_STREQ(e.what(), invalidArgumentErrMsg);
+        EXPECT_STREQ(e.what(), invalidArgumentErrorMsg);
         EXPECT_STREQ(e.detail().c_str(), "This is an invalid argument detail.");
     }
 }
 
 TEST(OmegaExceptionsTests, ThrowInvalidInterfaceException) {
     try {
-        throw InvalidInterfaceException("This is an invalid interface detail.");
+        throw InterfaceErrorException("This is an invalid interface detail.");
     }
-    catch(InvalidInterfaceException &e) {
-        EXPECT_EQ(e.code(), static_cast<int>(ExitCodes::INVALID_INTERFACE_ERROR));
-        EXPECT_STREQ(e.what(), invalidInterfaceErrMsg);
+    catch(InterfaceErrorException &e) {
+        EXPECT_EQ(e.code(), static_cast<int>(ExitCodes::INTERFACE_ERROR));
+        EXPECT_STREQ(e.what(), interfaceErrorMsg);
         EXPECT_STREQ(e.detail().c_str(), "This is an invalid interface detail.");
-    }
-}
-
-TEST(OmegaExceptionsTests, ThrowInvalidPortRangeException) {
-    try {
-        throw InvalidPortRangeException("This is an invalid port range detail.");
-    }
-    catch(InvalidPortRangeException &e) {
-        EXPECT_EQ(e.code(), static_cast<int>(ExitCodes::INVALID_PORT_RANGE_ERROR));
-        EXPECT_STREQ(e.what(), invalidPortRangeErrMsg);
-        EXPECT_STREQ(e.detail().c_str(), "This is an invalid port range detail.");
-    }
-}
-
-TEST(OmegaExceptionsTests, ThrowHostResolutionException) {
-    try {
-        throw HostnameException("This is an invalid hostname detail.");
-    }
-    catch(HostnameException &e) {
-        EXPECT_EQ(e.code(), static_cast<int>(ExitCodes::INVALID_HOSTNAME_ERROR));
-        EXPECT_STREQ(e.what(), invalidHostnameErrMsg);
-        EXPECT_STREQ(e.detail().c_str(), "This is an invalid hostname detail.");
     }
 }
 
 TEST(OmegaExceptionsTests, ThrowSocketException) {
     try {
-        throw SocketException("This is a socket error detail.");
+        throw SocketErrorException("This is a socket error detail.");
     }
-    catch(SocketException &e) {
+    catch(SocketErrorException &e) {
         EXPECT_EQ(e.code(), static_cast<int>(ExitCodes::SOCKET_ERROR));
-        EXPECT_STREQ(e.what(), socketErrMsg);
+        EXPECT_STREQ(e.what(), socketErrorMsg);
         EXPECT_STREQ(e.detail().c_str(), "This is a socket error detail.");
     }
 }
 
 TEST(OmegaExceptionsTests, ThrowPcapException) {
     try {
-        throw PcapException("This is a Pcap error detail.");
+        throw PcapErrorException("This is a Pcap error detail.");
     }
-    catch(PcapException &e) {
+    catch(PcapErrorException &e) {
         EXPECT_EQ(e.code(), static_cast<int>(ExitCodes::PCAP_ERROR));
-        EXPECT_STREQ(e.what(), pcapErrMsg);
+        EXPECT_STREQ(e.what(), pcapErrorMsg);
         EXPECT_STREQ(e.detail().c_str(), "This is a Pcap error detail.");
     }
 }
@@ -126,7 +104,7 @@ TEST(OmegaExceptionsTests, ThrowInterruptedException) {
     }
     catch(UserInterruptionException &e) {
         EXPECT_EQ(e.code(), static_cast<int>(ExitCodes::USER_INTERRUPTION_ERROR));
-        EXPECT_STREQ(e.what(), userInterruptionErrMsg);
+        EXPECT_STREQ(e.what(), userInterruptionMsg);
         EXPECT_STREQ(e.detail().c_str(), "This is a user interruption detail.");
     }
 }
@@ -137,7 +115,7 @@ TEST(OmegaExceptionsTests, ThrowInternalErrorException) {
     }
     catch(InternalErrorException &e) {
         EXPECT_EQ(e.code(), static_cast<int>(ExitCodes::INTERNAL_ERROR));
-        EXPECT_STREQ(e.what(), internalErrMsg);
+        EXPECT_STREQ(e.what(), internalErrorMsg);
         EXPECT_STREQ(e.detail().c_str(), "This is an internal error detail.");
     }
 }
@@ -152,8 +130,8 @@ TEST(OmegaExceptionsTests, ThrowUknownErrorException) {
         }
         catch(UknownErrorException &e) {
             EXPECT_EQ(e.code(), static_cast<int>(ExitCodes::UNKNOWN_ERROR));
-            EXPECT_STREQ(e.what(), badAllocException.what());
-            EXPECT_STREQ(e.detail().c_str(), "");
+            EXPECT_STREQ(e.what(), unknownErrorMsg);
+            EXPECT_STREQ(e.detail().c_str(), badAllocException.what());
         }
     }
 }

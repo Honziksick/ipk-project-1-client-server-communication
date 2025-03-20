@@ -34,18 +34,16 @@ namespace OmegaL4Scanner::Enums
      *          project.
      */
     enum class ExitCodes {
-        SUCESS                    = 0,  /**< Success exit code.                   */
-        HELP_REQUESTED            = 1,  /**< Help requested exit code.            */
-        INTERFACE_PRINT_REQUESTED = 2,  /**< Interface print requested exit code. */
-        INVALID_ARGUMENT_ERROR   = 10,  /**< Invalid argument error code.         */
-        INVALID_INTERFACE_ERROR  = 11,  /**< Invalid interface error code.        */
-        INVALID_PORT_RANGE_ERROR = 12,  /**< Invalid port range error code.       */
-        INVALID_HOSTNAME_ERROR   = 13,  /**< Invalid hostname error code.         */
-        SOCKET_ERROR             = 14,  /**< Socket error code.                   */
-        PCAP_ERROR               = 15,  /**< PCAP error code.                     */
-        USER_INTERRUPTION_ERROR  = 16,  /**< Interrupted by user error code.      */
-        INTERNAL_ERROR           = 99,  /**< Internal error code.                 */
-        UNKNOWN_ERROR            = 255  /**< Unknown error code.                  */
+        SUCESS                    = 0,  /**< Success exit code.                     */
+        HELP_REQUESTED            = 1,  /**< Help requested exit code.              */
+        INTERFACE_PRINT_REQUESTED = 2,  /**< Interface print requested exit code.   */
+        INVALID_ARGUMENT_ERROR    = 10,  /**< Invalid argument error code.           */
+        INTERFACE_ERROR           = 11,  /**< Error while getting active interfaces. */
+        SOCKET_ERROR              = 12,  /**< Socket error code.                     */
+        PCAP_ERROR                = 13,  /**< PCAP error code.                       */
+        USER_INTERRUPTION_ERROR   = 14,  /**< Interrupted by user error code.        */
+        INTERNAL_ERROR            = 99,  /**< Internal error code.                   */
+        UNKNOWN_ERROR             = 255  /**< Unknown error code.                    */
     }; // ExitCodes
 } // namespace OmegaL4Scanner::Enums
 

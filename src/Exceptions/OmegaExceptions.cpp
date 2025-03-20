@@ -47,63 +47,49 @@ namespace OmegaL4Scanner::Exceptions
     InvalidArgumentException::InvalidArgumentException(string detail)
         : OmegaBaseException{
             ExitCodes::INVALID_ARGUMENT_ERROR,
-            invalidArgumentErrMsg,
+            invalidArgumentErrorMsg,
             move(detail)
         } {}
 
-    InvalidInterfaceException::InvalidInterfaceException(string detail)
+    InterfaceErrorException::InterfaceErrorException(string detail)
         : OmegaBaseException{
-            ExitCodes::INVALID_INTERFACE_ERROR,
-            invalidInterfaceErrMsg,
+            ExitCodes::INTERFACE_ERROR,
+            interfaceErrorMsg,
             move(detail)
         } {}
 
-    InvalidPortRangeException::InvalidPortRangeException(string detail)
-        : OmegaBaseException{
-            ExitCodes::INVALID_PORT_RANGE_ERROR,
-            invalidPortRangeErrMsg,
-            move(detail)
-        } {}
-
-    HostnameException::HostnameException(string detail)
-        : OmegaBaseException{
-            ExitCodes::INVALID_HOSTNAME_ERROR,
-            invalidHostnameErrMsg,
-            move(detail)
-        } {}
-
-    SocketException::SocketException(string detail)
+    SocketErrorException::SocketErrorException(string detail)
         : OmegaBaseException{
             ExitCodes::SOCKET_ERROR,
-            socketErrMsg,
+            socketErrorMsg,
             move(detail)
         } {}
 
-    PcapException::PcapException(string detail)
+    PcapErrorException::PcapErrorException(string detail)
         : OmegaBaseException{
             ExitCodes::PCAP_ERROR,
-            pcapErrMsg,
+            pcapErrorMsg,
             move(detail)
         } {}
 
     UserInterruptionException::UserInterruptionException(string detail)
         : OmegaBaseException{
             ExitCodes::USER_INTERRUPTION_ERROR,
-            userInterruptionErrMsg,
+            userInterruptionMsg,
             move(detail)
         } {}
 
     InternalErrorException::InternalErrorException(string detail)
         : OmegaBaseException{
             ExitCodes::INTERNAL_ERROR,
-            internalErrMsg,
+            internalErrorMsg,
             move(detail)
         } {}
 
-    UknownErrorException::UknownErrorException(const char *message, string detail)
+    UknownErrorException::UknownErrorException(string detail)
         : OmegaBaseException{
             ExitCodes::UNKNOWN_ERROR,
-            message,
+            unknownErrorMsg,
             move(detail)
         } {}
 } // OmegaL4Scanner::Exceptions

@@ -65,64 +65,40 @@ namespace OmegaL4Scanner::Exceptions
     }; // InvalidArgumentException
 
     /**
-     * @class InvalidInterfaceException
+     * @class InterfaceErrorException
      * @brief Exception class for invalid interfaces.
      */
-    class InvalidInterfaceException final : public OmegaBaseException {
+    class InterfaceErrorException final : public OmegaBaseException {
     public:
         /**
-         * @brief Constructor for InvalidInterfaceException.
+         * @brief Constructor for InterfaceErrorException.
          */
-        explicit InvalidInterfaceException(std::string detail = "");
-    }; // InvalidInterfaceException
+        explicit InterfaceErrorException(std::string detail = "");
+    }; // InterfaceErrorException
 
     /**
-     * @class InvalidPortRangeException
-     * @brief Exception class for invalid port ranges.
-     */
-    class InvalidPortRangeException final : public OmegaBaseException {
-    public:
-        /**
-         * @brief Constructor for InvalidPortRangeException.
-         */
-        explicit InvalidPortRangeException(std::string detail = "");
-    }; // InvalidPortRangeException
-
-    /**
-     * @class HostnameException
-     * @brief Exception class for invalid hostnames.
-     */
-    class HostnameException final : public OmegaBaseException {
-    public:
-        /**
-         * @brief Constructor for HostnameException.
-         */
-        explicit HostnameException(std::string detail = "");
-    }; // HostnameException
-
-    /**
-     * @class SocketException
+     * @class SocketErrorException
      * @brief Exception class for socket errors.
      */
-    class SocketException final : public OmegaBaseException {
+    class SocketErrorException final : public OmegaBaseException {
     public:
         /**
-         * @brief Constructor for SocketException.
+         * @brief Constructor for SocketErrorException.
          */
-        explicit SocketException(std::string detail = "");
-    }; // SocketException
+        explicit SocketErrorException(std::string detail = "");
+    }; // SocketErrorException
 
     /**
-     * @class PcapException
+     * @class PcapErrorException
      * @brief Exception class for pcap errors.
      */
-    class PcapException final : public OmegaBaseException {
+    class PcapErrorException final : public OmegaBaseException {
     public:
         /**
-         * @brief Constructor for PcapException.
+         * @brief Constructor for PcapErrorException.
          */
-        explicit PcapException(std::string detail = "");
-    }; // PcapException
+        explicit PcapErrorException(std::string detail = "");
+    }; // PcapErrorException
 
     /**
      * @class UserInterruptionException
@@ -158,7 +134,7 @@ namespace OmegaL4Scanner::Exceptions
          * @brief Constructor for UknownErrorException.
          * @param message Error message of the original exception.
          */
-        explicit UknownErrorException(const char *message, std::string detail = "");
+        explicit UknownErrorException(std::string detail = "");
     }; // UknownErrorException
 } // OmegaL4Scanner::Exceptions
 
