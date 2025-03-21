@@ -32,14 +32,14 @@ namespace OmegaL4Scanner::Exceptions
 {
     HelpRequestedException::HelpRequestedException(string detail)
         : OmegaBaseException{
-            ExitCodes::HELP_REQUESTED,
+            ExitCodes::SUCESS,
             helpRequestedMsg,
             move(detail)
         } {}
 
     InterfacePrintRequestedException::InterfacePrintRequestedException(string detail)
         : OmegaBaseException{
-            ExitCodes::INTERFACE_PRINT_REQUESTED,
+            ExitCodes::SUCESS,
             interfacePrintRequestedMsg,
             move(detail)
         } {}

@@ -34,9 +34,7 @@ namespace OmegaL4Scanner::Enums
      *          project.
      */
     enum class ExitCodes {
-        SUCESS                    = 0,  /**< Success exit code.                     */
-        HELP_REQUESTED            = 1,  /**< Help requested exit code.              */
-        INTERFACE_PRINT_REQUESTED = 2,  /**< Interface print requested exit code.   */
+        SUCESS                    = 0,   /**< Success exit code.                     */
         INVALID_ARGUMENT_ERROR    = 10,  /**< Invalid argument error code.           */
         INTERFACE_ERROR           = 11,  /**< Error while getting active interfaces. */
         SOCKET_ERROR              = 12,  /**< Socket error code.                     */
@@ -45,7 +43,7 @@ namespace OmegaL4Scanner::Enums
         INTERNAL_ERROR            = 99,  /**< Internal error code.                   */
         UNKNOWN_ERROR             = 255  /**< Unknown error code.                    */
     }; // ExitCodes
-} // namespace OmegaL4Scanner::Enums
+} // OmegaL4Scanner::Enums
 
 #endif // EXIT_CODES_HPP
 

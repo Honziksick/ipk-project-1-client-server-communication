@@ -26,7 +26,7 @@
 #include "Exceptions/OmegaBaseException.hpp"
 #include <exception> // std::exception
 
-namespace OmegaL4Scanner::Exceptions
+namespace OmegaL4Scanner::Utilities
 {
     /**
      * @class ExceptionHandler
@@ -46,7 +46,7 @@ namespace OmegaL4Scanner::Exceptions
          * @brief Prints the given error message.
          * @param exception The exception containing the error message to print.
          */
-        static void printError(const OmegaBaseException &exception);
+        static void printError(const Exceptions::OmegaBaseException &exception);
 
         /**
          * @brief Terminates the program with the given error code.
@@ -66,9 +66,9 @@ namespace OmegaL4Scanner::Exceptions
          * @return Pointer to the OmegaBaseException if cast is successful,
          *         nullptr otherwise.
          */
-        static const OmegaBaseException *getOmegaException(const std::exception &exception);
+        static const Exceptions::OmegaBaseException *getOmegaException(const std::exception &exception);
     }; // ExceptionHandler
-} // OmegaL4Scanner::Exceptions
+} // OmegaL4Scanner::Utilities
 
 #endif // EXCEPTION_HANDLER_HPP
 

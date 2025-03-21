@@ -29,6 +29,7 @@
 #include <exception> // std::exception
 #include <string>    // std::string
 
+using namespace OmegaL4Scanner::Utilities;
 using namespace OmegaL4Scanner::Exceptions;
 using namespace OmegaL4Scanner::Enums;
 using namespace testing;
@@ -39,7 +40,7 @@ TEST(ErrorHandlerTests, HandleHelpRequestedException) {
         throw HelpRequestedException("Help me please, good sir.");
     }
     catch(const exception &e) {
-        EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::HELP_REQUESTED)), "");
+        EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::SUCESS)), "");
     }
 }
 
@@ -48,7 +49,7 @@ TEST(ErrorHandlerTests, HandleInterfacePrintRequestedException) {
         throw InterfacePrintRequestedException("This is a request for printing interfaces.");
     }
     catch(const exception &e) {
-        EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::INTERFACE_PRINT_REQUESTED)), "");
+        EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::SUCESS)), "");
     }
 }
 

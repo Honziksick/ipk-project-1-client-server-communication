@@ -20,17 +20,18 @@
  * @brief Implementation file for the ExceptionHandler class.
  */
 
-#include "Utilities/ExceptionHandler.hpp"
 #include "Exceptions/OmegaExceptions.hpp"
+#include "Utilities/ExceptionHandler.hpp"
 #include "Constants/ColorEscapeSequences.hpp"
 #include <exception> // std::exception
 #include <iostream>  // std::cerr
 #include <string>    // std::string
 
-using namespace std;
+using namespace OmegaL4Scanner::Exceptions;
 using namespace OmegaL4Scanner::Constants;
+using namespace std;
 
-namespace OmegaL4Scanner::Exceptions
+namespace OmegaL4Scanner::Utilities
 {
     void ExceptionHandler::handleError(const exception &exception) {
         // Attempt to cast the original exception to OmegaBaseException
