@@ -38,6 +38,11 @@ namespace OmegaL4Scanner::Networking
     class InterfaceInfo final {
     public:
         /**
+         * @brief Default constructor for the InterfaceInfo class.
+         */
+        InterfaceInfo();
+
+        /**
          * @brief Constructs a NetworkInterfaceInfo object.
          *
          * @param interfaceName The name of the network interface.

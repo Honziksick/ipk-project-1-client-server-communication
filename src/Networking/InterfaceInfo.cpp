@@ -28,6 +28,8 @@ using namespace std;
 
 namespace OmegaL4Scanner::Networking
 {
+    InterfaceInfo::InterfaceInfo() : mFlags{0} {}
+
     InterfaceInfo::InterfaceInfo(string interfaceName)
         : mName{move(interfaceName)}, mFlags{0} {}
 } // OmegaL4Scanner::Networking
