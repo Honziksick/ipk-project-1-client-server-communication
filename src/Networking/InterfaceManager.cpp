@@ -32,6 +32,8 @@
 #include <sys/socket.h> // AF_INET, AF_INET6
 #include <net/if.h>     // IFF_UP
 
+#include "Utilities/NetUtils.hpp"
+
 using namespace std;
 using namespace OmegaL4Scanner::Exceptions;
 using namespace OmegaL4Scanner::Utilities;
@@ -41,60 +43,48 @@ namespace OmegaL4Scanner::Networking
     // My implementation inspired by: https://dev.to/fmtweisszwerg/cc-how-to-get-all-interface-addresses-on-the-local-device-3pki
     vector<InterfaceInfo> InterfaceManager::getActiveInterfaces() {
         vector<InterfaceInfo> activeInterfaces;  // Vector/list of active interfaces
-        ifaddrs *interfaceAddresses;  // Pointer to the linked list of interface addresses
+        ifaddrs *pInterfaceAddresses;  // Pointer to the linked list of interface addresses
 
         // getifaddrs() returns -1 on error
-        if(getifaddrs(&interfaceAddresses) == -1) {
+        if(getifaddrs(&pInterfaceAddresses) == -1) {
             throw InternalErrorException(
                     static_cast<string>("getifaddrs() error:") + strerror(errno)
                     );
         }
 
         // Iterate through the linked list of loaded interface addresses
-        const ifaddrs *currentInterface = interfaceAddresses;
-        while(currentInterface != nullptr) {
+        const ifaddrs *pCurrentInterface = pInterfaceAddresses;
+        while(pCurrentInterface != nullptr) {
             // If the interface address is not set, skip it
-            if(currentInterface->ifa_addr == nullptr) {
-                currentInterface = currentInterface->ifa_next;
+            if(pCurrentInterface->ifa_addr == nullptr) {
+                pCurrentInterface = pCurrentInterface->ifa_next;
                 continue;
             }
 
             // If the interface is not up, skip it
-            if(!(currentInterface->ifa_flags & IFF_UP)) {
-                currentInterface = currentInterface->ifa_next;
+            if(!(pCurrentInterface->ifa_flags & IFF_UP)) {
+                pCurrentInterface = pCurrentInterface->ifa_next;
                 continue;
             }
 
             // Add the interface to the list of active interfaces
-            InterfaceInfo interfaceInfo(currentInterface->ifa_name);
+            InterfaceInfo interfaceInfo(pCurrentInterface->ifa_name);
 
             // Get the IP address of the interface
-            char ipAddressBuffer[INET6_ADDRSTRLEN];
-            if(const int addressFamily = currentInterface->ifa_addr->sa_family; addressFamily == AF_INET || addressFamily == AF_INET6) {
-                const void *ipAddress;
-
-                // Get the IP address based on the address family
-                if(addressFamily == AF_INET) {
-                    ipAddress = static_cast<void*>(&reinterpret_cast<sockaddr_in*>(currentInterface->ifa_addr)->sin_addr);
-                }
-                else {
-                    ipAddress = static_cast<void*>(&reinterpret_cast<sockaddr_in6*>(currentInterface->ifa_addr)->sin6_addr);
-                }
-
-                // Convert the IP address to a string
-                if(inet_ntop(addressFamily, ipAddress, ipAddressBuffer,
-                             sizeof(ipAddressBuffer)) != nullptr) {
+            char ipAddressBuffer[INET6_ADDRSTRLEN] = {};
+            if(const int addressFamily = pCurrentInterface->ifa_addr->sa_family; addressFamily == AF_INET || addressFamily == AF_INET6) {
+                if(NetUtils::socketAdressToString(pCurrentInterface->ifa_addr, addressFamily, ipAddressBuffer, sizeof(ipAddressBuffer))) {
                     interfaceInfo.mIpAddresses.emplace_back(ipAddressBuffer);
                 }
             }
 
             // Initialize the netmask in InterfaceInfo
-            if(currentInterface->ifa_netmask) {
-                const int addressFamily = currentInterface->ifa_addr->sa_family;
+            if(pCurrentInterface->ifa_netmask) {
+                const int addressFamily = pCurrentInterface->ifa_addr->sa_family;
 
                 // Get the netmask based on the address family
                 if(addressFamily == AF_INET) {
-                    const auto *sockAddrIn = reinterpret_cast<struct sockaddr_in*>(currentInterface->ifa_netmask);
+                    const auto *sockAddrIn = reinterpret_cast<struct sockaddr_in*>(pCurrentInterface->ifa_netmask);
 
                     // Convert the netmask to a string
                     if(inet_ntop(AF_INET,
@@ -105,7 +95,7 @@ namespace OmegaL4Scanner::Networking
                     }
                 }
                 else if(addressFamily == AF_INET6) {
-                    const auto *sockAddrIn6 = reinterpret_cast<struct sockaddr_in6*>(currentInterface->ifa_netmask);
+                    const auto *sockAddrIn6 = reinterpret_cast<struct sockaddr_in6*>(pCurrentInterface->ifa_netmask);
 
                     // Convert the netmask to a string
                     if(inet_ntop(AF_INET6,
@@ -118,9 +108,9 @@ namespace OmegaL4Scanner::Networking
             }
 
             // Initialize the broadcast address in InterfaceInfo
-            if(currentInterface->ifa_ifu.ifu_broadaddr && currentInterface->ifa_addr->sa_family == AF_INET) {
+            if(pCurrentInterface->ifa_ifu.ifu_broadaddr && pCurrentInterface->ifa_addr->sa_family == AF_INET) {
                 if(inet_ntop(AF_INET,
-                             &reinterpret_cast<sockaddr_in*>(currentInterface->ifa_ifu.ifu_broadaddr)->sin_addr,
+                             &reinterpret_cast<sockaddr_in*>(pCurrentInterface->ifa_ifu.ifu_broadaddr)->sin_addr,
                              ipAddressBuffer,
                              sizeof(ipAddressBuffer)) != nullptr) {
                     interfaceInfo.mBroadcastAddress = ipAddressBuffer;
@@ -128,9 +118,9 @@ namespace OmegaL4Scanner::Networking
             }
 
             // Initialize the destination address in InterfaceInfo
-            if(currentInterface->ifa_ifu.ifu_dstaddr && currentInterface->ifa_addr->sa_family == AF_INET) {
+            if(pCurrentInterface->ifa_ifu.ifu_dstaddr && pCurrentInterface->ifa_addr->sa_family == AF_INET) {
                 if(inet_ntop(AF_INET,
-                             &reinterpret_cast<sockaddr_in*>(currentInterface->ifa_ifu.ifu_dstaddr)->sin_addr,
+                             &reinterpret_cast<sockaddr_in*>(pCurrentInterface->ifa_ifu.ifu_dstaddr)->sin_addr,
                              ipAddressBuffer,
                              sizeof(ipAddressBuffer)) != nullptr) {
                     interfaceInfo.mDestinationAddress = ipAddressBuffer;
@@ -138,16 +128,16 @@ namespace OmegaL4Scanner::Networking
             }
 
             // Initialize the flags in InterfaceInfo
-            interfaceInfo.mFlags = currentInterface->ifa_flags;
+            interfaceInfo.mFlags = pCurrentInterface->ifa_flags;
 
             // Add the interface to the list of active interfaces
             activeInterfaces.emplace_back(interfaceInfo);
 
             // Move to the next interface in the linked list
-            currentInterface = currentInterface->ifa_next;
+            pCurrentInterface = pCurrentInterface->ifa_next;
         }
 
-        freeifaddrs(interfaceAddresses);
+        freeifaddrs(pInterfaceAddresses);
         return activeInterfaces;
     } // InterfaceManager::getActiveInterfaces()
 
