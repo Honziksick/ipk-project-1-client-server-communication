@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      15.03.2025                                                    *
- * Last edit:    15.03.2025                                                    *
+ * Last edit:    21.03.2025                                                    *
  *                                                                             *
  * Description:  Header file for custom data types used in the OMEGA L4        *
  *               Scanner project.                                              *
@@ -23,8 +23,9 @@
 #ifndef OMEGA_DATA_TYPES_HPP
 #define OMEGA_DATA_TYPES_HPP
 
+#include <string>   // std::string
 #include <variant>  // std::variant<T...>
-#include <utility>  // std::pair<T1, T2>
+#include <utility>  // std::pair<T1,T2>
 
 namespace OmegaL4Scanner::Common
 {
@@ -36,6 +37,17 @@ namespace OmegaL4Scanner::Common
      */
     using PortRange = std::variant<int, std::pair<int, int>>;
 
+    /**
+     * @brief Alias for std::string representation of protocol types.
+     *
+     * @details This alias represents the protocol type as a string.
+     *          It can be used to specify protocols such as "tcp" or "udp".
+     *
+     * @note Values are stored in Constants/ProtocolTypes file under
+     *       OmegaL4Scanner::Constants::ProtocolTypes namespace.
+     * @note The "tcp" and "udp" protocols are represented by constants TCP and UDP.
+     */
+    using Protocol = std::string;
 } // OmegaL4Scanner::Common
 
 #endif //OMEGA_DATA_TYPES_HPP
