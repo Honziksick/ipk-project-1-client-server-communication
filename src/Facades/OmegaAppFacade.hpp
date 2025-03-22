@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      20.03.2025                                                    *
- * Last edit:    21.03.2025                                                    *
+ * Last edit:    22.03.2025                                                    *
  *                                                                             *
  * Description: This file contains the declaration of the OmegaAppFacade       *
  *              class, which serves as a facade for the OMEGA L4 Scanner       *
@@ -85,16 +85,6 @@ namespace OmegaL4Scanner::Facades
          * the information of the specified interface.
          */
         void getInterfaceInfo();
-
-        /**
-        * @brief Scans the L4 layer of the network.
-        *
-        * @details This method performs the scanning of the L4 layer using
-        *          the initialized command line options and network interface
-        *          information. The results of the scan are processed and
-        *          printed to the standard output.
-        */
-        void scanL4Layer() const;
     }; // OmegaAppFacade
 } // OmegaL4Scanner::Facades
 
