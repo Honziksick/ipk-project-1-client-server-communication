@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      21.03.2025                                                    *
- * Last edit:    21.03.2025                                                    *
+ * Last edit:    22.03.2025                                                    *
  *                                                                             *
  * Description:  Implementation of the ScanResult class, which is responsible  *
  *               for storing the results of scans and formating them for       *
@@ -23,20 +23,24 @@
 
 #include "Scanning/ScanResult.hpp"
 #include "Common/OmegaDataTypes.hpp"
+#include "Exceptions/OmegaExceptions.hpp"
 #include "Enums/PortStatus.hpp"
 #include <string>  // std::string, std::to_string()
 
 using namespace OmegaL4Scanner::Common;
 using namespace OmegaL4Scanner::Enums;
+using namespace OmegaL4Scanner::Exceptions;
 using namespace std;
 
 namespace OmegaL4Scanner::Scanning
 {
-    ScanResult::ScanResult(const string &scannedIpAdress, const int port, const Protocol &protocol, const PortStatus status)
-        : mScannedIpAdress{scannedIpAdress}, mPort{port}, mProtocol{protocol}, mStatus{status} {}
+    ScanResult::ScanResult(): mPort(0), mStatus(PortStatus::UNKNOWN) {}
+
+    ScanResult::ScanResult(const string &scannedIpaddress, const int port, const Protocol &protocol, const PortStatus status)
+        : mScannedIpaddress{scannedIpaddress}, mPort{port}, mProtocol{protocol}, mStatus{status} {}
 
     string ScanResult::scanResultToString() const {
-        string result = mScannedIpAdress + " " + to_string(mPort) + " " + mProtocol + " ";
+        string result = mScannedIpaddress + " " + to_string(mPort) + " " + mProtocol + " ";
         switch(mStatus) {
             case PortStatus::OPEN:
                 result += "open";
@@ -47,6 +51,10 @@ namespace OmegaL4Scanner::Scanning
             case PortStatus::FILTERED:
                 result += "filtered";
                 break;
+            default:
+                throw InternalErrorException(
+                        "Trying to print scan result with unknown port status."
+                        );
         }
         return result;
     }

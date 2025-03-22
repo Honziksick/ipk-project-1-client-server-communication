@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      12.03.2025                                                    *
- * Last edit:    12.03.2025                                                    *
+ * Last edit:    22.03.2025                                                    *
  *                                                                             *
  * Description:  Declaration of the PortStatus enum, which is used to          *
  *               represent the status of a port in the OMEGA L4 Scanner.       *
@@ -33,9 +33,10 @@ namespace OmegaL4Scanner::Enums
      *          can be open, closed, or filtered.
      */
     enum class PortStatus {
-        OPEN     = 0,   /**< The port is open.     */
-        CLOSED   = 1,   /**< The port is closed.   */
-        FILTERED = 2,   /**< The port is filtered. */
+        UNKNOWN  = 0,   /**< The port status is unknown. */
+        OPEN     = 1,   /**< The port is open.           */
+        CLOSED   = 2,   /**< The port is closed.         */
+        FILTERED = 3    /**< The port is filtered.       */
     }; // PortStatus
 } // OmegaL4Scanner::Enums
 
