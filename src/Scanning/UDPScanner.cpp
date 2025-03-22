@@ -44,7 +44,7 @@ using namespace std;
 
 namespace OmegaL4Scanner::Scanning
 {
-    UdpScanner::UdpScanner(const std::vector<std::string> &ipaddressesToScan,
+    UdpScanner::UdpScanner(const vector<string> &ipaddressesToScan,
                            const InterfaceInfo &interfaceInfo,
                            const chrono::milliseconds waitTimeout)
         : PortScanner(ipaddressesToScan, interfaceInfo, waitTimeout) {}
@@ -184,14 +184,14 @@ namespace OmegaL4Scanner::Scanning
             pcapResult = pcap_next_ex(pHandle, &pPacketHeader, &pPacketData);
 
             // TODO: Remove debug messages
-            // std::clog << "[DEBUG] pcap_next_ex returned: " << pcapResult
-            //         << ", elapsed: " << elapsedMilliseconds << " ms" << std::endl;
+            // clog << "[DEBUG] pcap_next_ex returned: " << pcapResult
+            //         << ", elapsed: " << elapsedMilliseconds << " ms" << endl;
 
             // ICMP/ICMPv6 captured => port is CLOSED
             if(pcapResult == 1 && pPacketData != nullptr) {
                 // TODO: Remove debug messages
                 // if(pPacketHeader != nullptr) {
-                //     std::clog << "[DEBUG] Captured packet length: " << pPacketHeader->len << std::endl;
+                //     clog << "[DEBUG] Captured packet length: " << pPacketHeader->len << endl;
                 // }
 
                 pcap_close(pHandle);
@@ -200,7 +200,7 @@ namespace OmegaL4Scanner::Scanning
             // Check for errors
             if(pcapResult < 0) {
                 // TODO: Remove debug messages
-                // std::clog << "[DEBUG] pcap_next_ex error: " << pcap_geterr(pHandle) << std::endl;
+                // clog << "[DEBUG] pcap_next_ex error: " << pcap_geterr(pHandle) << endl;
                 break;
             }
 
