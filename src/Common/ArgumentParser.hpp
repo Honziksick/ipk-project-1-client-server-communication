@@ -4,13 +4,13 @@
  * University:   Faculty of Information Technology, BUT                        *
  * Subject:      IPK: Computer Communications and Networks                     *
  *                                                                             *
- * File:         ArgumentParser.hpp                                         *
+ * File:         ArgumentParser.hpp                                            *
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      14.03.2025                                                    *
- * Last edit:    15.03.2025                                                    *
+ * Last edit:    22.03.2025                                                    *
  *                                                                             *
- * Description:  Declaration of the ArgumentParser class, which is          *
+ * Description:  Declaration of the ArgumentParser class, which is             *
  *               responsible for parsing command line arguments and options.   *
  *                                                                             *
  ******************************************************************************/
@@ -105,13 +105,13 @@ namespace OmegaL4Scanner::Common
         static bool validatePortRange(const std::string &portRange);
 
         /**
-         * @brief Validates if the given string is a valid hostname or IPv4/IPv6 adress.
+         * @brief Validates if the given string is a valid hostname or IPv4/IPv6 address.
          *
          * @details This function checks if the provided hostname string meets the
          *          criteria for a valid host. It ensures that the hostname or
-         *          IP adress conforms to the required format and constraints.
+         *          IP address conforms to the required format and constraints.
          *
-         * @param hostOrIpAddress The string representing the hostname/IP adress
+         * @param hostOrIpAddress The string representing the hostname/IP address
          *                        to be validated.
          * @return bool True if the hostname is valid, false otherwise.
          */

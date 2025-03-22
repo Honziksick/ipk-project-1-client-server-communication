@@ -4,13 +4,13 @@
  * University:   Faculty of Information Technology, BUT                        *
  * Subject:      IPK: Computer Communications and Networks                     *
  *                                                                             *
- * File:         ArgumentParser.cpp                                         *
+ * File:         ArgumentParser.cpp                                            *
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      14.03.2025                                                    *
- * Last edit:    20.03.2025                                                    *
+ * Last edit:    22.03.2025                                                    *
  *                                                                             *
- * Description:  Implementation of the ArgumentParser class, which is       *
+ * Description:  Implementation of the ArgumentParser class, which is          *
  *               responsible for parsing command line arguments and options.   *
  *                                                                             *
  ******************************************************************************/
@@ -268,7 +268,7 @@ namespace OmegaL4Scanner::Common
 
         // Check if the interface name matches the regular expression
         return regex_match(interfaceName, interfaceNameRegex);
-    } // ArgumentParser::validateInterfaceName()}
+    } // ArgumentParser::validateInterfaceName()
 
     vector<PortRange> ArgumentParser::mergeAndSortPortRanges(const vector<PortRange> &portRanges) {
         vector<pair<int, int>> intervals;       // Vector for intervals (pair<int, int>)

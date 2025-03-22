@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      21.03.2025                                                    *
- * Last edit:    21.03.2025                                                    *
+ * Last edit:    22.03.2025                                                    *
  *                                                                             *
  * Description:  This file contains the implementation of the NetUtils class,  *
  *               which provides utility functions for network operations.      *
@@ -21,24 +21,24 @@
  */
 
 #include "Utilities/NetUtils.hpp"
-#include <arpa/inet.h>  // inet_ntop(), sockaddr_in, sockaddr_in6,
-#include <sys/socket.h> // AF_INET, AF_INET6
+#include <arpa/inet.h>   // inet_ntop(), sockaddr_in, sockaddr_in6,
+#include <sys/socket.h>  // AF_INET, AF_INET6
 
 namespace OmegaL4Scanner::Utilities
 {
-    bool NetUtils::socketAdressToString(const sockaddr *pSocketAddress, const int addressFamily,
+    bool NetUtils::socketaddressToString(const sockaddr *pSocketAddress, const int addressFamily,
                                         char *pAddressBuffer, const size_t bufferSize) {
-        const void *pIpAdress;
+        const void *pIpaddress;
 
         // Get the IP address based on the address family
         if(addressFamily == AF_INET) {
-            pIpAdress = static_cast<const void*>(&reinterpret_cast<const sockaddr_in*>(pSocketAddress)->sin_addr);
+            pIpaddress = static_cast<const void*>(&reinterpret_cast<const sockaddr_in*>(pSocketAddress)->sin_addr);
         }
         else {
-            pIpAdress = static_cast<const void*>(&reinterpret_cast<const sockaddr_in6*>(pSocketAddress)->sin6_addr);
+            pIpaddress = static_cast<const void*>(&reinterpret_cast<const sockaddr_in6*>(pSocketAddress)->sin6_addr);
         }
 
-        return inet_ntop(addressFamily, pIpAdress, pAddressBuffer, bufferSize) != nullptr;
+        return inet_ntop(addressFamily, pIpaddress, pAddressBuffer, bufferSize) != nullptr;
     }
 } // OmegaL4Scanner::Utilities
 

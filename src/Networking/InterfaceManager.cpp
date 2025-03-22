@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      20.03.2025                                                    *
- * Last edit:    20.03.2025                                                    *
+ * Last edit:    22.03.2025                                                    *
  *                                                                             *
  * Description:  Implementation of the InterfaceManager class, which is        *
  *               responsible for managing network interfaces.                  *
@@ -42,13 +42,13 @@ namespace OmegaL4Scanner::Networking
 {
     // My implementation inspired by: https://dev.to/fmtweisszwerg/cc-how-to-get-all-interface-addresses-on-the-local-device-3pki
     vector<InterfaceInfo> InterfaceManager::getActiveInterfaces() {
-        vector<InterfaceInfo> activeInterfaces;  // Vector/list of active interfaces
-        ifaddrs *pInterfaceAddresses;  // Pointer to the linked list of interface addresses
+        vector<InterfaceInfo> activeInterfaces{};  // Vector/list of active interfaces
+        ifaddrs *pInterfaceAddresses{};  // Pointer to the linked list of interface addresses
 
         // getifaddrs() returns -1 on error
         if(getifaddrs(&pInterfaceAddresses) == -1) {
             throw InternalErrorException(
-                    static_cast<string>("getifaddrs() error:") + strerror(errno)
+                    "getifaddrs() error:" + string(strerror(errno))
                     );
         }
 
@@ -71,9 +71,9 @@ namespace OmegaL4Scanner::Networking
             InterfaceInfo interfaceInfo(pCurrentInterface->ifa_name);
 
             // Get the IP address of the interface
-            char ipAddressBuffer[INET6_ADDRSTRLEN] = {};
+            char ipAddressBuffer[INET6_ADDRSTRLEN]{};
             if(const int addressFamily = pCurrentInterface->ifa_addr->sa_family; addressFamily == AF_INET || addressFamily == AF_INET6) {
-                if(NetUtils::socketAdressToString(pCurrentInterface->ifa_addr, addressFamily, ipAddressBuffer, sizeof(ipAddressBuffer))) {
+                if(NetUtils::socketaddressToString(pCurrentInterface->ifa_addr, addressFamily, ipAddressBuffer, sizeof(ipAddressBuffer))) {
                     interfaceInfo.mIpAddresses.emplace_back(ipAddressBuffer);
                 }
             }

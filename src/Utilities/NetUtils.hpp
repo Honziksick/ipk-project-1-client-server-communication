@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      21.03.2025                                                    *
- * Last edit:    21.03.2025                                                    *
+ * Last edit:    22.03.2025                                                    *
  *                                                                             *
  * Description:  This file contains the declaration of the NetUtils class,     *
  *               which provides utility functions for network operations.      *
@@ -48,7 +48,7 @@ namespace OmegaL4Scanner::Utilities
          * @param bufferSize Size of the buffer.
          * @return bool True if the conversion was successful, false otherwise.
          */
-        static bool socketAdressToString(const sockaddr *pSocketAddress, int addressFamily,
+        static bool socketaddressToString(const sockaddr *pSocketAddress, int addressFamily,
                                          char *pAddressBuffer, size_t bufferSize);
     }; // NetUtils
 } // OmegaL4Scanner::Utilities
