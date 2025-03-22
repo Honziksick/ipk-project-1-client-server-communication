@@ -31,7 +31,6 @@
 using namespace OmegaL4Scanner::Utilities;
 using namespace OmegaL4Scanner::Exceptions;
 using namespace std;
-#include <iostream>
 
 namespace OmegaL4Scanner::Networking
 {
@@ -60,7 +59,6 @@ namespace OmegaL4Scanner::Networking
             char ipBuffer[INET6_ADDRSTRLEN]{};
             if(NetUtils::socketaddressToString(pAddressInfo->ai_addr, pAddressInfo->ai_family, ipBuffer, sizeof(ipBuffer))) {
                 ipAddresses.emplace_back(ipBuffer);
-                std::cout << "Resolved IP address: " << ipBuffer << std::endl;
             }
         }
 
