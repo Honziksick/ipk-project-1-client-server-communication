@@ -8,7 +8,7 @@
 # Author:       Jan Kalina <xkalinj00>                                         #
 #                                                                              #
 # Created:      12.03.2025                                                     #
-# Last edit:    20.03.2025                                                     #
+# Last edit:    21.03.2025                                                     #
 #                                                                              #
 # Description:  This file contains the CMake configuration for the OMEGA L4    #
 #               Scanner project. It sets up the project, specifies the C++20   #
@@ -59,7 +59,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/..")
 
 # Include necessary directories (e.g., libpcap, src)
 include_directories(src)
-include_directories(${PCAP_INCLUDE_DIR})
+include_directories(/usr/include)
 
 # Collect all source files in the 'src' directory
 file(GLOB_RECURSE ALL_SOURCES CONFIGURE_DEPENDS
@@ -76,11 +76,12 @@ list(REMOVE_ITEM ALL_SOURCES
 #  Build library from project files (ipk-l4-scan-lib) (except 'main.cpp') #
 ###                                                                     ###
 
+# Create a static library from the source files
 add_library(ipk-l4-scan-lib STATIC ${ALL_SOURCES})
 target_include_directories(ipk-l4-scan-lib PUBLIC src)
 
-# Find and link the PCAP library
-target_link_libraries(ipk-l4-scan-lib PUBLIC ${PCAP_LIBRARY})
+# Link with libpcap and libnet manually.
+target_link_libraries(ipk-l4-scan-lib PUBLIC pcap net)
 
 
 ###                                  ###
@@ -92,6 +93,9 @@ target_link_libraries(ipk-l4-scan
                       PRIVATE
                       ipk-l4-scan-lib
                       )
+
+target_include_directories(ipk-l4-scan PRIVATE ipk-l4-scan-lib)
+
 
 ################################################################################
 #                                                                              #
