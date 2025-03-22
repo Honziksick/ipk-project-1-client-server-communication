@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      13.03.2025                                                    *
- * Last edit:    13.03.2025                                                    *
+ * Last edit:    22.03.2025                                                    *
  *                                                                             *
  * Description:  This file contains unit tests for the ExceptionHandler class. *
  *               The tests verify that the ExceptionHandler correctly handles  *
@@ -71,12 +71,30 @@ TEST(ErrorHandlerTests, HandleInvalidInterfaceException) {
     }
 }
 
+TEST(ErrorHandlerTests, HandleHostnameResolutionException) {
+    try {
+        throw HostnameResolutionErrorException("This is a hostname resolution error detail.");
+    }
+    catch(const exception &e) {
+        EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::HOSTNAME_RESOLUTION_ERROR)), "");
+    }
+}
+
 TEST(ErrorHandlerTests, HandleSocketException) {
     try {
         throw SocketErrorException("This is a socket error detail.");
     }
     catch(const exception &e) {
         EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::SOCKET_ERROR)), "");
+    }
+}
+
+TEST(ErrorHandlerTests, HandleClientCommunicationException) {
+    try {
+        throw CommunicationErrorException("This is a client communication error detail.");
+    }
+    catch(const exception &e) {
+        EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::COMMUNICATION_ERROR)), "");
     }
 }
 

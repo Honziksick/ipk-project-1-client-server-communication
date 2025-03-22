@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      12.03.2025                                                    *
- * Last edit:    19.03.2025                                                    *
+ * Last edit:    22.03.2025                                                    *
  *                                                                             *
  * Description:  Declaration of the ExitCodes enum class, which is used to     *
  *               represent error and other exit codes in the OMEGA L4 Scanner. *
@@ -34,14 +34,16 @@ namespace OmegaL4Scanner::Enums
      *          project.
      */
     enum class ExitCodes {
-        SUCESS                    = 0,   /**< Success exit code.                     */
-        INVALID_ARGUMENT_ERROR    = 10,  /**< Invalid argument error code.           */
-        INTERFACE_ERROR           = 11,  /**< Error while getting active interfaces. */
-        SOCKET_ERROR              = 12,  /**< Socket error code.                     */
-        PCAP_ERROR                = 13,  /**< PCAP error code.                       */
-        USER_INTERRUPTION_ERROR   = 14,  /**< Interrupted by user error code.        */
-        INTERNAL_ERROR            = 99,  /**< Internal error code.                   */
-        UNKNOWN_ERROR             = 255  /**< Unknown error code.                    */
+        SUCESS                     = 0,   /**< Success exit code.                     */
+        INVALID_ARGUMENT_ERROR     = 10,  /**< Invalid argument error code.           */
+        INTERFACE_ERROR            = 11,  /**< Error while getting active interfaces. */
+        HOSTNAME_RESOLUTION_ERROR  = 12,  /**< Hostname resolution error code.        */
+        SOCKET_ERROR               = 21,  /**< Socket error code.                     */
+        COMMUNICATION_ERROR        = 22,  /**< Client communication error code.       */
+        PCAP_ERROR                 = 23,  /**< PCAP error code.                       */
+        USER_INTERRUPTION_ERROR    = 98,  /**< Interrupted by user error code.        */
+        INTERNAL_ERROR             = 99,  /**< Internal error code.                   */
+        UNKNOWN_ERROR              = 255  /**< Unknown error code.                    */
     }; // ExitCodes
 } // OmegaL4Scanner::Enums
 

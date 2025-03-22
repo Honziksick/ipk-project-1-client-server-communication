@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      12.03.2025                                                    *
- * Last edit:    19.03.2025                                                    *
+ * Last edit:    22.03.2025                                                    *
  *                                                                             *
  * Description:  Header file for the OmegaExceptions classes used in the       *
  *               OMEGA L4 Scanner project.                                     *
@@ -77,6 +77,18 @@ namespace OmegaL4Scanner::Exceptions
     }; // InterfaceErrorException
 
     /**
+     * @class HostnameResolutionErrorException
+     * @brief Exception class for hostname resolution error.
+     */
+    class HostnameResolutionErrorException final : public OmegaBaseException {
+    public:
+        /**
+         * @brief Constructor for HostnameResolutionErrorException.
+         */
+        explicit HostnameResolutionErrorException(std::string detail = "");
+    }; // HostnameResolutionErrorException
+
+    /**
      * @class SocketErrorException
      * @brief Exception class for socket errors.
      */
@@ -87,6 +99,18 @@ namespace OmegaL4Scanner::Exceptions
          */
         explicit SocketErrorException(std::string detail = "");
     }; // SocketErrorException
+
+    /**
+     * @class CommunicationErrorException
+     * @brief Exception class for network communication errors.
+     */
+    class CommunicationErrorException final : public OmegaBaseException {
+    public:
+        /**
+         * @brief Constructor for CommunicationErrorException.
+         */
+        explicit CommunicationErrorException(std::string detail = "");
+    }; // CommunicationErrorException
 
     /**
      * @class PcapErrorException

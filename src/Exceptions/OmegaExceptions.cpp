@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      12.03.2025                                                    *
- * Last edit:    20.03.2025                                                    *
+ * Last edit:    22.03.2025                                                    *
  *                                                                             *
  * Description:  Implementation file for the OmegaBaseException class used in  *
  *               the OMEGA L4 Scanner project.                                 *
@@ -58,10 +58,24 @@ namespace OmegaL4Scanner::Exceptions
             move(detail)
         } {}
 
+    HostnameResolutionErrorException::HostnameResolutionErrorException(string detail)
+    : OmegaBaseException{
+        ExitCodes::HOSTNAME_RESOLUTION_ERROR,
+        hostnameResolutionErrorMsg,
+        move(detail)
+    } {}
+
     SocketErrorException::SocketErrorException(string detail)
         : OmegaBaseException{
             ExitCodes::SOCKET_ERROR,
             socketErrorMsg,
+            move(detail)
+        } {}
+
+    CommunicationErrorException::CommunicationErrorException(string detail)
+        : OmegaBaseException{
+            ExitCodes::COMMUNICATION_ERROR,
+            communicationErrorMsg,
             move(detail)
         } {}
 

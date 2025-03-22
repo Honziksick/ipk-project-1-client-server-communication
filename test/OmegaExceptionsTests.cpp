@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      13.03.2025                                                    *
- * Last edit:    13.03.2025                                                    *
+ * Last edit:    22.03.2025                                                    *
  *                                                                             *
  * Description:  This file contains unit tests for the OmegaExceptions classes *
  *               using the Google Test framework.                              *
@@ -76,6 +76,17 @@ TEST(OmegaExceptionsTests, ThrowInvalidInterfaceException) {
     }
 }
 
+TEST(OmegaExceptionsTests, ThrowHostnameResolutionException) {
+    try {
+        throw HostnameResolutionErrorException("This is a hostname resolution error detail.");
+    }
+    catch(const HostnameResolutionErrorException &e) {
+        EXPECT_EQ(e.code(), static_cast<int>(ExitCodes::HOSTNAME_RESOLUTION_ERROR));
+        EXPECT_STREQ(e.what(), hostnameResolutionErrorMsg);
+        EXPECT_STREQ(e.detail().c_str(), "This is a hostname resolution error detail.");
+    }
+}
+
 TEST(OmegaExceptionsTests, ThrowSocketException) {
     try {
         throw SocketErrorException("This is a socket error detail.");
@@ -84,6 +95,17 @@ TEST(OmegaExceptionsTests, ThrowSocketException) {
         EXPECT_EQ(e.code(), static_cast<int>(ExitCodes::SOCKET_ERROR));
         EXPECT_STREQ(e.what(), socketErrorMsg);
         EXPECT_STREQ(e.detail().c_str(), "This is a socket error detail.");
+    }
+}
+
+TEST(OmegaExceptionsTests, ThrowClientCommunicationException) {
+    try {
+        throw CommunicationErrorException("This is a client communication error detail.");
+    }
+    catch(const CommunicationErrorException &e) {
+        EXPECT_EQ(e.code(), static_cast<int>(ExitCodes::COMMUNICATION_ERROR));
+        EXPECT_STREQ(e.what(), communicationErrorMsg);
+        EXPECT_STREQ(e.detail().c_str(), "This is a client communication error detail.");
     }
 }
 

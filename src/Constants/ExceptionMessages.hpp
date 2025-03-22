@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      12.03.2025                                                    *
- * Last edit:    20.03.2025                                                    *
+ * Last edit:    22.03.2025                                                    *
  *                                                                             *
  * Description:  This file contains constant exception messages used in the    *
  *               Omega L4 Scanner project.                                     *
@@ -46,9 +46,19 @@ namespace OmegaL4Scanner::Constants
     inline auto interfaceErrorMsg = "Invalid interface provided.";
 
     /**
+     * @brief Error message for hostname resolution error.
+     */
+    inline auto hostnameResolutionErrorMsg = "Unable to resolve hostname.";
+
+    /**
      * @brief Error message for socket error.
      */
     inline auto socketErrorMsg = "Socket error occurred.";
+
+    /**
+     * @brief Error message for client communication error.
+     */
+    inline auto communicationErrorMsg = "Error occurred during client communication.";
 
     /**
      * @brief Error message for pcap error.
