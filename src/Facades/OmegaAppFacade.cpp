@@ -29,6 +29,7 @@
 #include "Networking/InterfaceManager.hpp"
 #include "Utilities/ActiveInterfacePrinter.hpp"
 #include "Utilities/ExceptionHandler.hpp"
+#include "Utilities/SignalHandler.hpp"
 #include <exception>  // std::exception
 #include <cstdlib>    // std::exit
 
@@ -44,6 +45,8 @@ namespace OmegaL4Scanner::Facades
 
     void OmegaAppFacade::runScan(const int argc, char *argv[]) {
         try {
+            SignalHandler::registerHandlers(); // handles SIGINT signal
+
             try {
                 getCommandLineOptions(argc, argv);
             }
@@ -73,6 +76,5 @@ namespace OmegaL4Scanner::Facades
         mInterfaceInfo = InterfaceManager::getInterfaceByName(mCommandLineOptions.mInterfaceName);
     } // OmegaAppFacade::getInterfaceInfo()
 } // OmegaL4Scanner::Facades
-
 
 /*** end of file OmegaAppFacade.cpp ***/
