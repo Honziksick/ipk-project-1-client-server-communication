@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      21.03.2025                                                    *
- * Last edit:    21.03.2025                                                    *
+ * Last edit:    24.03.2025                                                    *
  *                                                                             *
  * Description:  Header file defining protocol types constants for the         *
  *               OMEGA L4 Scanner project.                                     *
@@ -27,8 +27,8 @@
 
 namespace OmegaL4Scanner::Constants
 {
-    const Common::Protocol TCP = "tcp";    /**< Constant for TCP protocol type. */
-    const Common::Protocol UDP = "udp";    /**< Constant for UDP protocol type. */
+    inline const Common::Protocol TCP = "tcp";    /**< Constant for TCP protocol type. */
+    inline const Common::Protocol UDP = "udp";    /**< Constant for UDP protocol type. */
 } // OmegaL4Scanner::Constants
 
 #endif // PROTOCOL_CONSTANTS_HPP

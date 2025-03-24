@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      20.03.2025                                                    *
- * Last edit:    20.03.2025                                                    *
+ * Last edit:    24.03.2025                                                    *
  *                                                                             *
  * Description:  This file contains unit tests for the InterfaceManager        *
  *               class. It shows how to properly set up the mock environment   *
@@ -360,11 +360,11 @@ TEST_F(InterfaceManagerTest, BroadcastSet_OnlyForIPv4) {
     // Assert
     ASSERT_EQ(interfaces.size(), 2u);
 
-    EXPECT_EQ(interfaces[0].mName, "eth0");
-    EXPECT_EQ(interfaces[0].mBroadcastAddress, "10.0.0.255");
+    EXPECT_EQ(interfaces[0].mName, "eth1");
+    EXPECT_TRUE(interfaces[0].mBroadcastAddress.empty()); // ignoring IPv6 broadcast
 
-    EXPECT_EQ(interfaces[1].mName, "eth1");
-    EXPECT_TRUE(interfaces[1].mBroadcastAddress.empty()); // ignoring IPv6 broadcast
+    EXPECT_EQ(interfaces[1].mName, "eth0");
+    EXPECT_EQ(interfaces[1].mBroadcastAddress, "10.0.0.255");
 }
 
 TEST_F(InterfaceManagerTest, DestinationAddressForIPv4) {

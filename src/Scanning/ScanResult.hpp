@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      21.03.2025                                                    *
- * Last edit:    22.03.2025                                                    *
+ * Last edit:    23.03.2025                                                    *
  *                                                                             *
  * Description:  Declaration of the ScanResult class, which is responsible     *
  *               for storing the results of scans and formating them for       *
@@ -52,14 +52,14 @@ namespace OmegaL4Scanner::Scanning
         ScanResult(const std::string &scannedIpaddress, int port, const Common::Protocol &protocol, Enums::PortStatus status);
 
         std::string mScannedIpaddress; /**< IP address that was scanned. */
-        int mPort;                    /**< Port number.                 */
-        Common::Protocol mProtocol;   /**< Protocol used (TCP or UDP).  */
-        Enums::PortStatus mStatus;    /**< Status of the port.          */
+        int mPort;                     /**< Port number.                 */
+        Common::Protocol mProtocol;    /**< Protocol used (TCP or UDP).  */
+        Enums::PortStatus mStatus;     /**< Status of the port.          */
 
         /**
          * @brief Returns a formatted string of the scan result.
          *
-         * @return A string representation of the scan result.
+         * @return std::string A string representation of the scan result.
          */
         std::string scanResultToString() const;
     }; // ScanResult

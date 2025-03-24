@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      21.03.2025                                                    *
- * Last edit:    22.03.2025                                                    *
+ * Last edit:    23.03.2025                                                    *
  *                                                                             *
  * Description:  Implementation of the HostResolver class, which is            *
  *               responsible for resolving hostnames to IP addresses.          *
@@ -39,7 +39,7 @@ namespace OmegaL4Scanner::Networking
 
         // Prepare the 'hints' structure for address resolution
         addrinfo hints{};
-        memset(&hints, 0, sizeof(hints)); // Zero out 'hints'
+        memset(&hints, 0, sizeof(hints));
 
         hints.ai_family = AF_UNSPEC; // get both IPv4 and IPv6 addresses
         hints.ai_socktype = 0;       // any socket type (TCP/UDP)

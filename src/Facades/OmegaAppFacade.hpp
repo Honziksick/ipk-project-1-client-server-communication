@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      20.03.2025                                                    *
- * Last edit:    22.03.2025                                                    *
+ * Last edit:    23.03.2025                                                    *
  *                                                                             *
  * Description: This file contains the declaration of the OmegaAppFacade       *
  *              class, which serves as a facade for the OMEGA L4 Scanner       *
@@ -18,7 +18,7 @@
  ******************************************************************************/
 /**
  * @file OmegaAppFacade.hpp
- * @author Jan Kalina <xkalinj00>
+ * @author Jan Kalina \<xkalinj00>
  * @brief Header file for the OmegaAppFacade class.
  */
 
