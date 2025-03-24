@@ -8,7 +8,7 @@
 # Author:       Jan Kalina <xkalinj00>                                         #
 #                                                                              #
 # Created:      12.03.2025                                                     #
-# Last edit:    12.03.2025                                                     #
+# Last edit:    23.03.2025                                                     #
 #                                                                              #
 # Description:  This Makefile is used for compiling the project "OMEGA L4      #
 #               Scanner" for the IPK course. Besides building, the Makefile    #
@@ -53,7 +53,7 @@ COLOR_MAGENTA = \033[0;35m
 $(VERBOSE)SILENTOPT = -s
 
 # Definition of a constant to disable selected targets (for submission)
-#DISABLE_TARGETS ?= true
+DISABLE_TARGETS ?= true
 
 
 ###                   ###
@@ -80,6 +80,42 @@ ARCHIVE_DIR = $(PACK_DIR)/$(PACK_NAME)
 
 ################################################################################
 #                                                                              #
+#                                BUILD SETTINGS                                #
+#                                                                              #
+################################################################################
+
+###           ###
+#  Compilation  #
+###           ###
+
+CXX = g++
+CXXFLAGS = -std=c++20 -O3
+
+
+###                  ###
+#  Source & Libraries  #
+###                  ###
+
+INCLUDES = -Isrc
+LIBS = -lpcap -lnet
+IPK_LIB = build/libipk-l4-scan.a
+
+
+###                     ###
+#  Wildcards & Variables  #
+###                     ###
+
+# For 'ipk-l4-scan-lib.a'
+LIB_SRCS := $(shell find src -type f -name "*.cpp" | grep -v "src/App/main.cpp")
+LIB_OBJS := $(patsubst src/%, build/%, $(LIB_SRCS:.cpp=.o))
+
+# For 'ipk-l4-scan'
+MAIN_SRC = src/App/main.cpp
+MAIN_OBJ = $(patsubst src/%, build/%, $(MAIN_SRC:.cpp=.o))
+
+
+################################################################################
+#                                                                              #
 #                                MAIN COMMANDS                                 #
 #                                                                              #
 ################################################################################
@@ -93,9 +129,13 @@ ARCHIVE_DIR = $(PACK_DIR)/$(PACK_NAME)
 all: build
 
 ### MC # build: # Builds the compiler for the "Team xkalinj00"
+ifndef DISABLE_TARGETS
 build:
 	@cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 	@cmake --build build --config Release --target ipk-l4-scan
+else
+build: $(EXECUTABLE)
+endif
 
 ### MC # run: Runs the executable with print help argument
 run:
@@ -165,7 +205,7 @@ else
 doc:
 	$(MAKE) $(SILENTOPT) clean-doc
 	doxygen Doxyfile
-	@echo '<html><head><meta http-equiv="refresh" content="0; url=./html/index.html"></head></html>' > $(DOC_DIR)documentation.html
+	@echo '<html><head><meta http-equiv="refresh" content="0; url=./html/index.html"></head></html>' > $(DOC_DIR)/documentation.html
 endif
 
 ### MC # pack: # Creates a ZIP archive with files intended for submission
@@ -181,6 +221,28 @@ else
 pack:
 	@echo "$(COLOR_RED)The 'pack' target is disabled for project submission.$(COLOR_RESET)"
 endif
+
+################################################################################
+#                                                                              #
+#                        SPECIALIZED 'BUILD' COMMANDS                          #
+#                                                                              #
+################################################################################
+
+# Build static library 'libipk-l4-scan.a'
+$(IPK_LIB): $(LIB_OBJS)
+	@echo "Creating static library '$(IPK_LIB)'..."
+	ar rcs $(IPK_LIB) $(LIB_OBJS)
+
+# Build the excecutable 'ipk-l4-scan'
+$(EXECUTABLE): $(MAIN_OBJ) $(IPK_LIB)
+	@echo "Linking executable '$(EXECUTABLE)'..."
+	$(CXX) $(CXXFLAGS) -o $(EXECUTABLE) $(MAIN_OBJ) -Lbuild -lipk-l4-scan $(LIBS)
+
+# Compile all object files into the 'build' directory
+build/%.o: src/%.cpp
+	@mkdir -p $(dir $@)
+	@echo "Compiling $<..."
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 
 ################################################################################
@@ -205,13 +267,8 @@ clean-test:
 	rm -rf $(TEST_BIN_DIR)
 
 ### C # clean-doc: # Removes generated content of the 'doc' directory
-ifndef DISABLE_TARGETS
 clean-doc:
 	find $(DOC_DIR) -mindepth 1 ! -path '$(DOC_DIR)/resources*' ! -path '$(DOC_DIR)/raw*' -delete || true
-else
-clean-doc:
-	rm -rf $(DOC_DIR)
-endif
 
 ### C # clean-pack: # Removes the 'pack' directory (including the archive)
 ifndef DISABLE_TARGETS
@@ -230,16 +287,48 @@ endif
 ################################################################################
 
 ### T # test-exceptions: # Builds and runs the 'OmegaExceptions' test
+ifndef DISABLE_TARGETS
 test-exceptions:
 	@cmake -S . -B build -DCMAKE_BUILD_TYPE=Test
-	@cmake --build build --config Test --target OmegaExceptionsTest
-	./$(TEST_BIN_DIR)/OmegaExceptionsTest
+	@cmake --build build --config Test --target OmegaExceptionsTests
+	./$(TEST_BIN_DIR)/OmegaExceptionsTests
+else
+test-exceptions:
+	@echo "$(COLOR_RED)The 'test-exceptions' target is disabled for project submission.$(COLOR_RESET)"
+endif
 
 ### T # test-error-handler: # Builds and runs the 'ErrorHandler' test
+ifndef DISABLE_TARGETS
 test-error-handler:
 	@cmake -S . -B build -DCMAKE_BUILD_TYPE=Test
-	@cmake --build build --config Test --target ErrorHandlerTest
-	./$(TEST_BIN_DIR)/ErrorHandlerTest
+	@cmake --build build --config Test --target ErrorHandlerTests
+	./$(TEST_BIN_DIR)/ErrorHandlerTests
+else
+test-error-handler:
+	@echo "$(COLOR_RED)The 'test-error-handler' target is disabled for project submission.$(COLOR_RESET)"
+endif
+
+### T # test-argument-parser: # Builds and runs the 'ArgumentParser' test
+ifndef DISABLE_TARGETS
+test-argument-parser:
+	@cmake -S . -B build -DCMAKE_BUILD_TYPE=Test
+	@cmake --build build --config Test --target ArgumentParserTests
+	./$(TEST_BIN_DIR)/ArgumentParserTests
+else
+test-argument-parser:
+	@echo "$(COLOR_RED)The 'test-argument-parser' target is disabled for project submission.$(COLOR_RESET)"
+endif
+
+### T # test-interface-manager: # Builds and runs the 'InterfaceManager' test
+ifndef DISABLE_TARGETS
+test-interface-manager:
+	@cmake -S . -B build -DCMAKE_BUILD_TYPE=Test
+	@cmake --build build --config Test --target InterfaceManagerTests
+	./$(TEST_BIN_DIR)/InterfaceManagerTests
+else
+test-interface-manager:
+	@echo "$(COLOR_RED)The 'test-interface-manager' target is disabled for project submission.$(COLOR_RESET)"
+endif
 
 
 ################################################################################
@@ -264,6 +353,12 @@ pack-prepare:
 			--prune-empty-dirs ./ $(ARCHIVE_DIR)/; \
 		else \
 			echo "$(COLOR_RED)\nError: The directory "$(SRC_DIR)" does not exist.$(COLOR_RESET)"; \
+		fi; \
+		if [ -d "$(TEST_DIR)" ]; then \
+			rsync -av $(TEST_DIR)/*.cpp $(ARCHIVE_DIR)/; \
+		else \
+		else \
+			echo "$(COLOR_RED)\nError: The directory "$(TEST_DIR)" does not exist.$(COLOR_RESET)"; \
 		fi; \
 		if [ -f "Makefile" ]; then \
 			rsync -a Makefile $(ARCHIVE_DIR)/; \

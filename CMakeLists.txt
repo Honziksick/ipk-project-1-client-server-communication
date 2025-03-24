@@ -8,7 +8,7 @@
 # Author:       Jan Kalina <xkalinj00>                                         #
 #                                                                              #
 # Created:      12.03.2025                                                     #
-# Last edit:    21.03.2025                                                     #
+# Last edit:    23.03.2025                                                     #
 #                                                                              #
 # Description:  This file contains the CMake configuration for the OMEGA L4    #
 #               Scanner project. It sets up the project, specifies the C++20   #
@@ -59,7 +59,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/..")
 
 # Include necessary directories (e.g., libpcap, src)
 include_directories(src)
-include_directories(/usr/include)
 
 # Collect all source files in the 'src' directory
 file(GLOB_RECURSE ALL_SOURCES CONFIGURE_DEPENDS
