@@ -8,6 +8,7 @@ sandbox/
 **/pack/
 **/test/bin/
 **/test/googletest-library
+**/devenv/*
 
 ### C++ template
 # Prerequisites
