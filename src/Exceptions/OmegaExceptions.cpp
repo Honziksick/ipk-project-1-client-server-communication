@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      12.03.2025                                                    *
- * Last edit:    22.03.2025                                                    *
+ * Last edit:    24.03.2025                                                    *
  *                                                                             *
  * Description:  Implementation file for the OmegaBaseException class used in  *
  *               the OMEGA L4 Scanner project.                                 *
@@ -32,14 +32,14 @@ namespace OmegaL4Scanner::Exceptions
 {
     HelpRequestedException::HelpRequestedException(string detail)
         : OmegaBaseException{
-            ExitCodes::SUCESS,
+            ExitCodes::SUCCESS,
             helpRequestedMsg,
             move(detail)
         } {}
 
     InterfacePrintRequestedException::InterfacePrintRequestedException(string detail)
         : OmegaBaseException{
-            ExitCodes::SUCESS,
+            ExitCodes::SUCCESS,
             interfacePrintRequestedMsg,
             move(detail)
         } {}
@@ -59,11 +59,11 @@ namespace OmegaL4Scanner::Exceptions
         } {}
 
     HostnameResolutionErrorException::HostnameResolutionErrorException(string detail)
-    : OmegaBaseException{
-        ExitCodes::HOSTNAME_RESOLUTION_ERROR,
-        hostnameResolutionErrorMsg,
-        move(detail)
-    } {}
+        : OmegaBaseException{
+            ExitCodes::HOSTNAME_RESOLUTION_ERROR,
+            hostnameResolutionErrorMsg,
+            move(detail)
+        } {}
 
     SocketErrorException::SocketErrorException(string detail)
         : OmegaBaseException{
@@ -72,17 +72,10 @@ namespace OmegaL4Scanner::Exceptions
             move(detail)
         } {}
 
-    CommunicationErrorException::CommunicationErrorException(string detail)
+    LibnetErrorException::LibnetErrorException(string detail)
         : OmegaBaseException{
-            ExitCodes::COMMUNICATION_ERROR,
-            communicationErrorMsg,
-            move(detail)
-        } {}
-
-    PcapErrorException::PcapErrorException(string detail)
-        : OmegaBaseException{
-            ExitCodes::PCAP_ERROR,
-            pcapErrorMsg,
+            ExitCodes::LIBNET_ERROR,
+            libnetErrorMsg,
             move(detail)
         } {}
 

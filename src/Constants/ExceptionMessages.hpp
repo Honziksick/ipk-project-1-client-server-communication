@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      12.03.2025                                                    *
- * Last edit:    22.03.2025                                                    *
+ * Last edit:    24.03.2025                                                    *
  *                                                                             *
  * Description:  This file contains constant exception messages used in the    *
  *               Omega L4 Scanner project.                                     *
@@ -56,14 +56,9 @@ namespace OmegaL4Scanner::Constants
     inline auto socketErrorMsg = "Socket error occurred.";
 
     /**
-     * @brief Error message for client communication error.
+     * @brief Error message for libnet error.
      */
-    inline auto communicationErrorMsg = "Error occurred during client communication.";
-
-    /**
-     * @brief Error message for pcap error.
-     */
-    inline auto pcapErrorMsg = "Pcap error occurred.";
+    inline auto libnetErrorMsg = "Libnet library returned an error.";
 
     /**
      * @brief Error message for user interruption.

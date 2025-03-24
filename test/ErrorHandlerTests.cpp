@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      13.03.2025                                                    *
- * Last edit:    22.03.2025                                                    *
+ * Last edit:    24.03.2025                                                    *
  *                                                                             *
  * Description:  This file contains unit tests for the ExceptionHandler class. *
  *               The tests verify that the ExceptionHandler correctly handles  *
@@ -40,7 +40,7 @@ TEST(ErrorHandlerTests, HandleHelpRequestedException) {
         throw HelpRequestedException("Help me please, good sir.");
     }
     catch(const exception &e) {
-        EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::SUCESS)), "");
+        EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::SUCCESS)), "");
     }
 }
 
@@ -49,7 +49,7 @@ TEST(ErrorHandlerTests, HandleInterfacePrintRequestedException) {
         throw InterfacePrintRequestedException("This is a request for printing interfaces.");
     }
     catch(const exception &e) {
-        EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::SUCESS)), "");
+        EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::SUCCESS)), "");
     }
 }
 
@@ -89,21 +89,12 @@ TEST(ErrorHandlerTests, HandleSocketException) {
     }
 }
 
-TEST(ErrorHandlerTests, HandleClientCommunicationException) {
-    try {
-        throw CommunicationErrorException("This is a client communication error detail.");
-    }
-    catch(const exception &e) {
-        EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::COMMUNICATION_ERROR)), "");
-    }
-}
-
 TEST(ErrorHandlerTests, HandlePcapException) {
     try {
-        throw PcapErrorException("This is a Pcap error detail.");
+        throw LibnetErrorException("This is a Pcap error detail.");
     }
     catch(const exception &e) {
-        EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::PCAP_ERROR)), "");
+        EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::LIBNET_ERROR)), "");
     }
 }
 

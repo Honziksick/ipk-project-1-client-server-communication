@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      12.03.2025                                                    *
- * Last edit:    22.03.2025                                                    *
+ * Last edit:    24.03.2025                                                    *
  *                                                                             *
  * Description:  Header file for the OmegaExceptions classes used in the       *
  *               OMEGA L4 Scanner project.                                     *
@@ -36,6 +36,7 @@ namespace OmegaL4Scanner::Exceptions
     public:
         /**
          * @brief Constructor for HelpRequestedException.
+         * @param detail Additional information if needed.
          */
         explicit HelpRequestedException(std::string detail = "");
     }; // HelpRequestedException
@@ -48,6 +49,7 @@ namespace OmegaL4Scanner::Exceptions
     public:
         /**
          * @brief Constructor for InterfacePrintRequestedException.
+         * @param detail Additional information if needed.
          */
         explicit InterfacePrintRequestedException(std::string detail = "");
     }; // InterfacePrintRequestedException
@@ -60,6 +62,7 @@ namespace OmegaL4Scanner::Exceptions
     public:
         /**
          * @brief Constructor for InvalidArgumentException.
+         * @param detail Additional information about the error.
          */
         explicit InvalidArgumentException(std::string detail = "");
     }; // InvalidArgumentException
@@ -72,6 +75,7 @@ namespace OmegaL4Scanner::Exceptions
     public:
         /**
          * @brief Constructor for InterfaceErrorException.
+         * @param detail Additional information about the error.
          */
         explicit InterfaceErrorException(std::string detail = "");
     }; // InterfaceErrorException
@@ -84,6 +88,7 @@ namespace OmegaL4Scanner::Exceptions
     public:
         /**
          * @brief Constructor for HostnameResolutionErrorException.
+         * @param detail Additional information about the error.
          */
         explicit HostnameResolutionErrorException(std::string detail = "");
     }; // HostnameResolutionErrorException
@@ -96,33 +101,23 @@ namespace OmegaL4Scanner::Exceptions
     public:
         /**
          * @brief Constructor for SocketErrorException.
+         * @param detail Additional information about the error.
          */
         explicit SocketErrorException(std::string detail = "");
     }; // SocketErrorException
 
     /**
-     * @class CommunicationErrorException
-     * @brief Exception class for network communication errors.
+     * @class LibnetErrorException
+     * @brief Exception class for libnet errors.
      */
-    class CommunicationErrorException final : public OmegaBaseException {
+    class LibnetErrorException final : public OmegaBaseException {
     public:
         /**
-         * @brief Constructor for CommunicationErrorException.
+         * @brief Constructor for LibnetErrorException.
+         * @param detail Additional information about the error.
          */
-        explicit CommunicationErrorException(std::string detail = "");
-    }; // CommunicationErrorException
-
-    /**
-     * @class PcapErrorException
-     * @brief Exception class for pcap errors.
-     */
-    class PcapErrorException final : public OmegaBaseException {
-    public:
-        /**
-         * @brief Constructor for PcapErrorException.
-         */
-        explicit PcapErrorException(std::string detail = "");
-    }; // PcapErrorException
+        explicit LibnetErrorException(std::string detail = "");
+    }; // LibnetErrorException
 
     /**
      * @class UserInterruptionException
@@ -132,6 +127,7 @@ namespace OmegaL4Scanner::Exceptions
     public:
         /**
          * @brief Constructor for UserInterruptionException.
+         * @param detail Additional information about the error.
          */
         explicit UserInterruptionException(std::string detail = "");
     }; // UserInterruptionException
@@ -144,6 +140,7 @@ namespace OmegaL4Scanner::Exceptions
     public:
         /**
          * @brief Constructor for InternalErrorException.
+         * @param detail Additional information about the error.
          */
         explicit InternalErrorException(std::string detail = "");
     }; // InternalErrorException
@@ -156,7 +153,7 @@ namespace OmegaL4Scanner::Exceptions
     public:
         /**
          * @brief Constructor for UknownErrorException.
-         * @param message Error message of the original exception.
+         * @param detail Additional information about the error.
          */
         explicit UknownErrorException(std::string detail = "");
     }; // UknownErrorException
