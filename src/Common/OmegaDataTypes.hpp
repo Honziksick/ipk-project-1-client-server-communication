@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      15.03.2025                                                    *
- * Last edit:    21.03.2025                                                    *
+ * Last edit:    24.03.2025                                                    *
  *                                                                             *
  * Description:  Header file for custom data types used in the OMEGA L4        *
  *               Scanner project.                                              *
@@ -48,6 +48,15 @@ namespace OmegaL4Scanner::Common
      * @note The "tcp" and "udp" protocols are represented by constants TCP and UDP.
      */
     using Protocol = std::string;
+
+    /**
+     * @brief Alias for boolean representing the type of IP address.
+     *
+     * @details This alias is used to specify the type of IP address.
+     *          - `true` represents an IPv6 address.
+     *          - `false` represents an IPv4 address.
+     */
+    using IPAddressVersion = bool;
 } // OmegaL4Scanner::Common
 
 #endif //OMEGA_DATA_TYPES_HPP
