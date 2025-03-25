@@ -49,11 +49,11 @@ namespace OmegaL4Scanner::Scanning
          * @param protocol The protocol used (TCP or UDP).
          * @param status The status of the port.
          */
-        ScanResult(const std::string &scannedIpaddress, int port, const Common::Protocol &protocol, Enums::PortStatus status);
+        ScanResult(const std::string &scannedIpaddress, int port, const Common::ProtocolType &protocol, Enums::PortStatus status);
 
         std::string mScannedIpaddress; /**< IP address that was scanned. */
         int mPort;                     /**< Port number.                 */
-        Common::Protocol mProtocol;    /**< Protocol used (TCP or UDP).  */
+        Common::ProtocolType mProtocol;    /**< Protocol used (TCP or UDP).  */
         Enums::PortStatus mStatus;     /**< Status of the port.          */
 
         /**

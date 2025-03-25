@@ -47,7 +47,7 @@ namespace OmegaL4Scanner::Common
      *       OmegaL4Scanner::Constants::ProtocolTypes namespace.
      * @note The "tcp" and "udp" protocols are represented by constants TCP and UDP.
      */
-    using Protocol = std::string;
+    using ProtocolType = std::string;
 
     /**
      * @brief Alias for boolean representing the type of IP address.

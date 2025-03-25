@@ -27,8 +27,8 @@
 
 namespace OmegaL4Scanner::Constants
 {
-    inline const Common::Protocol TCP = "tcp";    /**< Constant for TCP protocol type. */
-    inline const Common::Protocol UDP = "udp";    /**< Constant for UDP protocol type. */
+    inline const Common::ProtocolType TCP = "tcp";    /**< Constant for TCP protocol type. */
+    inline const Common::ProtocolType UDP = "udp";    /**< Constant for UDP protocol type. */
 } // OmegaL4Scanner::Constants
 
 #endif // PROTOCOL_CONSTANTS_HPP

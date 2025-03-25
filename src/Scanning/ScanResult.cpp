@@ -36,7 +36,7 @@ namespace OmegaL4Scanner::Scanning
 {
     ScanResult::ScanResult(): mPort(0), mStatus(PortStatus::UNKNOWN) {}
 
-    ScanResult::ScanResult(const string &scannedIpaddress, const int port, const Protocol &protocol, const PortStatus status)
+    ScanResult::ScanResult(const string &scannedIpaddress, const int port, const ProtocolType &protocol, const PortStatus status)
         : mScannedIpaddress{scannedIpaddress}, mPort{port}, mProtocol{protocol}, mStatus{status} {}
 
     string ScanResult::scanResultToString() const {
