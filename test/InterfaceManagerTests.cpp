@@ -96,13 +96,13 @@ extern "C" int __wrap_getifaddrs(ifaddrs **ifap) {
     }
 
     // Create a static array of ifaddrs to survive until freeifaddrs is called.
-    static ifaddrs staticEntries[16] = {};
-    static sockaddr_in staticSockAddrIn[16] = {};
-    static sockaddr_in6 staticSockAddrIn6[16] = {};
-    static sockaddr_in staticNetmask4[16] = {};
-    static sockaddr_in6 staticNetmask6[16] = {};
-    static sockaddr_in staticBroadcast4[16] = {};
-    static sockaddr_in staticDestination4[16] = {};
+    static ifaddrs staticEntries[16]{};
+    static sockaddr_in staticSockAddrIn[16]{};
+    static sockaddr_in6 staticSockAddrIn6[16]{};
+    static sockaddr_in staticNetmask4[16]{};
+    static sockaddr_in6 staticNetmask6[16]{};
+    static sockaddr_in staticBroadcast4[16]{};
+    static sockaddr_in staticDestination4[16]{};
 
     // Initialize the static entries
     size_t i = 0;
@@ -251,10 +251,10 @@ TEST_F(InterfaceManagerTest, GetActiveInterfaces_SingleIPv4_Success) {
     ASSERT_EQ(interfaces.size(), 1u);
     EXPECT_EQ(interfaces[0].mName, "eth0");
     EXPECT_FALSE(interfaces[0].mIpAddresses.empty());
-    EXPECT_EQ(interfaces[0].mIpAddresses[0], "192.168.1.10");
-    EXPECT_TRUE(interfaces[0].mNetmask.empty());
-    EXPECT_TRUE(interfaces[0].mBroadcastAddress.empty());
-    EXPECT_TRUE(interfaces[0].mDestinationAddress.empty());
+    EXPECT_EQ(interfaces[0].mIpAddresses[0].mIpAddress, "192.168.1.10");
+    EXPECT_TRUE(interfaces[0].mIpAddresses[0].mNetmask.empty());
+    EXPECT_EQ(interfaces[0].mIpAddresses[0].mBroadcastAddress, "N/A");
+    EXPECT_EQ(interfaces[0].mIpAddresses[0].mDestinationAddress, "N/A");
 }
 
 TEST_F(InterfaceManagerTest, GetActiveInterfaces_FailGetIfAddrs) {
@@ -320,7 +320,7 @@ TEST_F(InterfaceManagerTest, NetmaskSet) {
     // Arrange
     MockInterfaceDef d;
     d.mName = "eth0";
-    d.mFlags = IFF_UP;
+    d.mFlags = IFF_UP | IFF_BROADCAST | IFF_POINTOPOINT;
     d.mFamily = AF_INET;
     d.mIp = "192.168.0.42";
     d.mNetmask = "255.255.255.0";
@@ -331,7 +331,7 @@ TEST_F(InterfaceManagerTest, NetmaskSet) {
 
     // Assert
     ASSERT_EQ(interfaces.size(), 1u);
-    EXPECT_EQ(interfaces[0].mNetmask, "255.255.255.0");
+    EXPECT_EQ(interfaces[0].mIpAddresses[0].mNetmask, "255.255.255.0");
 }
 
 TEST_F(InterfaceManagerTest, BroadcastSet_OnlyForIPv4) {
@@ -339,7 +339,7 @@ TEST_F(InterfaceManagerTest, BroadcastSet_OnlyForIPv4) {
     // AF_INET => broadcast should be set
     MockInterfaceDef d1;
     d1.mName = "eth0";
-    d1.mFlags = IFF_UP;
+    d1.mFlags = IFF_UP | IFF_BROADCAST | IFF_POINTOPOINT;
     d1.mFamily = AF_INET;
     d1.mIp = "10.0.0.5";
     d1.mBroadcast = "10.0.0.255";
@@ -348,7 +348,7 @@ TEST_F(InterfaceManagerTest, BroadcastSet_OnlyForIPv4) {
     // AF_INET6 => broadcast ignored
     MockInterfaceDef d2;
     d2.mName = "eth1";
-    d2.mFlags = IFF_UP;
+    d2.mFlags = IFF_UP | IFF_BROADCAST | IFF_POINTOPOINT;
     d2.mFamily = AF_INET6;
     d2.mIp = "fe80::abcd";
     d2.mBroadcast = "fe80::ffff"; // this is ignored in InterfaceManager
@@ -361,10 +361,10 @@ TEST_F(InterfaceManagerTest, BroadcastSet_OnlyForIPv4) {
     ASSERT_EQ(interfaces.size(), 2u);
 
     EXPECT_EQ(interfaces[0].mName, "eth1");
-    EXPECT_TRUE(interfaces[0].mBroadcastAddress.empty()); // ignoring IPv6 broadcast
+    EXPECT_EQ(interfaces[0].mIpAddresses[0].mBroadcastAddress, "N/A"); // ignoring IPv6 broadcast
 
     EXPECT_EQ(interfaces[1].mName, "eth0");
-    EXPECT_EQ(interfaces[1].mBroadcastAddress, "10.0.0.255");
+    EXPECT_EQ(interfaces[1].mIpAddresses[0].mBroadcastAddress, "10.0.0.255");
 }
 
 TEST_F(InterfaceManagerTest, DestinationAddressForIPv4) {
@@ -372,7 +372,7 @@ TEST_F(InterfaceManagerTest, DestinationAddressForIPv4) {
     // tun0 with p2p destination 10.8.0.1
     MockInterfaceDef d;
     d.mName = "tun0";
-    d.mFlags = IFF_UP;
+    d.mFlags = IFF_UP | IFF_BROADCAST | IFF_POINTOPOINT;
     d.mFamily = AF_INET;
     d.mIp = "10.8.0.2";
     d.mDestination = "10.8.0.1";
@@ -383,21 +383,21 @@ TEST_F(InterfaceManagerTest, DestinationAddressForIPv4) {
 
     // Assert
     ASSERT_EQ(interfaces.size(), 1u);
-    EXPECT_EQ(interfaces[0].mDestinationAddress, "10.8.0.1");
+    EXPECT_EQ(interfaces[0].mIpAddresses[0].mDestinationAddress, "10.8.0.1");
 }
 
 TEST_F(InterfaceManagerTest, GetInterfaceByName_Simple) {
     // Arrange
     MockInterfaceDef d1;
     d1.mName = "eth0";
-    d1.mFlags = IFF_UP;
+    d1.mFlags = IFF_UP | IFF_BROADCAST | IFF_POINTOPOINT;
     d1.mFamily = AF_INET;
     d1.mIp = "1.2.3.4";
     gMockInterfaces.push_back(d1);
 
     MockInterfaceDef d2;
     d2.mName = "wlan0";
-    d2.mFlags = IFF_UP;
+    d2.mFlags = IFF_UP | IFF_BROADCAST | IFF_POINTOPOINT;
     d2.mFamily = AF_INET;
     d2.mIp = "192.168.5.5";
     gMockInterfaces.push_back(d2);
@@ -408,14 +408,14 @@ TEST_F(InterfaceManagerTest, GetInterfaceByName_Simple) {
     // Assert
     EXPECT_EQ(interface.mName, "eth0");
     EXPECT_EQ(interface.mIpAddresses.size(), 1u);
-    EXPECT_EQ(interface.mIpAddresses[0], "1.2.3.4");
+    EXPECT_EQ(interface.mIpAddresses[0].mIpAddress, "1.2.3.4");
 }
 
 TEST_F(InterfaceManagerTest, GetInterfaceByName_NotFound) {
     // Arrange
     MockInterfaceDef d;
     d.mName = "eth0";
-    d.mFlags = IFF_UP;
+    d.mFlags = IFF_UP | IFF_BROADCAST | IFF_POINTOPOINT;
     d.mFamily = AF_INET;
     d.mIp = "192.168.0.10";
     gMockInterfaces.push_back(d);
@@ -428,7 +428,7 @@ TEST_F(InterfaceManagerTest, GetInterfaceByName_CaseInsensitive) {
     // Arrange
     MockInterfaceDef d;
     d.mName = "eth0";
-    d.mFlags = IFF_UP;
+    d.mFlags = IFF_UP | IFF_BROADCAST | IFF_POINTOPOINT;
     d.mFamily = AF_INET;
     d.mIp = "10.0.0.2";
     gMockInterfaces.push_back(d);
@@ -444,7 +444,7 @@ TEST_F(InterfaceManagerTest, GetInterfaceByName_PartialName) {
     // Arrange
     MockInterfaceDef d;
     d.mName = "eth0";
-    d.mFlags = IFF_UP;
+    d.mFlags = IFF_UP | IFF_BROADCAST | IFF_POINTOPOINT;
     d.mFamily = AF_INET;
     d.mIp = "10.0.0.2";
     gMockInterfaces.push_back(d);

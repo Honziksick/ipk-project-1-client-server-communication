@@ -4,34 +4,44 @@
  * University:   Faculty of Information Technology, BUT                        *
  * Subject:      IPK: Computer Communications and Networks                     *
  *                                                                             *
- * File:         InterfaceInfo.cpp                                             *
+ * File:         AddressInfo.hpp                                               *
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      19.03.2025                                                    *
  * Last edit:    20.03.2025                                                    *
  *                                                                             *
- * Description:  Implementation of the InterfaceInfo class, which              *
- *               provides information about network interfaces.                *
+ * Description:  Implementation of the AddressInfo class, which  provides      *
+ *               information about IP addresse of given interface.             *
  *                                                                             *
  ******************************************************************************/
 /**
- * @file InterfaceInfo.cpp
+ * @file AddressInfo.hpp
  * @author Jan Kalina \<xkalinj00>
- * @brief Implementation file for the InterfaceInfo class.
+ * @brief Implementation file for the AddressInfo class.
  */
 
-#include "Networking/InterfaceInfo.hpp"
-#include <string>  // std::string
-#include <utility> // std::move
+#ifndef ADDRESS_INFO_HPP
+#define ADDRESS_INFO_HPP
 
-using namespace std;
+#include <string> // std::string
 
 namespace OmegaL4Scanner::Networking
 {
-    InterfaceInfo::InterfaceInfo() : mFlags{0} {}
+    /**
+     * @class AddressInfo
+     * @brief Provides information about IP addresses of a given interface.
+     */
+    class AddressInfo final {
+    public:
+        std::string mIpAddress;           /**< IP address. */
+        std::string mNetmask;             /**< Netmask.    */
+        std::string mBroadcastAddress;    /**< Broadcast address for IPv4; "N/A" for IPv6.                  */
+        std::string mDestinationAddress;  /**< Destination address for point-to-point IPv4; "N/A" for IPv6. */
 
-    InterfaceInfo::InterfaceInfo(string interfaceName, const unsigned int flags)
-        : mName{move(interfaceName)}, mFlags{flags} {}
+        static constexpr std::string N_A = "N/A";  /**< Not applicable string. */
+    }; // AddressInfo
 } // OmegaL4Scanner::Networking
 
-/*** end of file InterfaceInfo.cpp ***/
+#endif // ADDRESS_INFO_HPP
+
+/*** end of file AddressInfo.hpp ***/

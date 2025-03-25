@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      20.03.2025                                                    *
- * Last edit:    20.03.2025                                                    *
+ * Last edit:    25.03.2025                                                    *
  *                                                                             *
  * Description:  This file contains declaration of the ActiveInterfacePrinter  *
  *               class, which provides functionality to print information      *
@@ -26,7 +26,6 @@
 
 #include "Networking/InterfaceInfo.hpp"
 #include <string> // std::string
-#include <vector> // std::vector
 
 namespace OmegaL4Scanner::Utilities
 {
@@ -43,17 +42,11 @@ namespace OmegaL4Scanner::Utilities
 
     private:
         /**
-         * @brief Prints detailed information about a single network interface.
+         * @brief Prints information about a network interface.
          *
-         * @param interface An InterfaceInfo object representing a single
-         *                  network interface.
+         * @param interfaceInfo An InterfaceInfo object representing the network interface
          */
-        static void printSingleInterfaceInfo(const Networking::InterfaceInfo &interface);
-
-        /**
-         * @brief Prints the header for the active network interfaces section.
-         */
-        static void printHeader();
+        static void printInterfaceInfo(const Networking::InterfaceInfo &interfaceInfo);
 
         /**
          * @brief Prints detailed information about an IP address.
@@ -68,15 +61,9 @@ namespace OmegaL4Scanner::Utilities
                                           const std::string &broadcast, const std::string &destination);
 
         /**
-         * @brief Prints information about a group of network interfaces with
-         *        the same name.
-         *
-         * @param interfaceName The name of the network interface group.
-         * @param interfaceGroup A vector of InterfaceInfo objects representing
-         *                   the network interface group.
+         * @brief Prints the header for the active network interfaces section.
          */
-        static void printInterfaceGroup(const std::string &interfaceName,
-                                        const std::vector<Networking::InterfaceInfo> &interfaceGroup);
+        static void printHeader();
 
         /**
          * @brief Prints a separator line consisting of a repeated character.

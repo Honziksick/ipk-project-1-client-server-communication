@@ -20,9 +20,10 @@
  * @brief Implementation file for the InterfaceManager class.
  */
 
-#include "Exceptions/OmegaExceptions.hpp"
 #include "Networking/InterfaceManager.hpp"
 #include "Networking/InterfaceInfo.hpp"
+#include "Networking/AddressInfo.hpp"
+#include "Exceptions/OmegaExceptions.hpp"
 #include "Utilities/StringUtils.hpp"
 #include <string>        // std::string
 #include <vector>        // std::vector
@@ -70,71 +71,89 @@ namespace OmegaL4Scanner::Networking
             }
 
             // Create new InterfaceInfo object for new interface name
-            string interfaceName = pCurrentInterface->ifa_name;
+            const string interfaceName = pCurrentInterface->ifa_name;
             if(!interfaceMap.contains(interfaceName)) {
-                interfaceMap[interfaceName] = InterfaceInfo(interfaceName);
+                interfaceMap[interfaceName] = InterfaceInfo(interfaceName, pCurrentInterface->ifa_flags);
             }
+
+            // Determine the address family (IPv4 or IPv6)
+            const int addressFamily = pCurrentInterface->ifa_addr->sa_family;
 
             // Get the IP address of the interface
-            const int addressFamily = pCurrentInterface->ifa_addr->sa_family;
-            if(addressFamily == AF_INET || addressFamily == AF_INET6) {
-                char ipBuffer[INET6_ADDRSTRLEN]{};
-                if(NetUtils::socketaddressToString(pCurrentInterface->ifa_addr, addressFamily, ipBuffer, sizeof(ipBuffer))) {
-                    interfaceMap[interfaceName].mIpAddresses.emplace_back(ipBuffer);
-                }
+            AddressInfo addressInfo;
+            char ipBuffer[INET6_ADDRSTRLEN]{};  // both IPv4 and IPv6 will fit
+
+            if(NetUtils::socketaddressToString(pCurrentInterface->ifa_addr, addressFamily,
+                                               ipBuffer, sizeof(ipBuffer))) {
+                addressInfo.mIpAddress = ipBuffer;
             }
 
-            // Initialize the netmask in InterfaceInfo
-            if(pCurrentInterface->ifa_netmask) {
-                const int family = pCurrentInterface->ifa_addr->sa_family;
-                char netmaskBuffer[INET6_ADDRSTRLEN]{};
-
-                // Get the netmask based on the address family
-                if(family == AF_INET) {
-                    auto *sockAddrIn = reinterpret_cast<struct sockaddr_in*>(pCurrentInterface->ifa_netmask);
+            // Proccess IPv4 address
+            if(addressFamily == AF_INET) {
+                // Initialize the netmask for IPv4
+                if(pCurrentInterface->ifa_netmask) {
+                    char netmaskBuffer[INET_ADDRSTRLEN]{};
+                    const auto *pSocketAddressIn =
+                            reinterpret_cast<struct sockaddr_in*>(pCurrentInterface->ifa_netmask);
 
                     // Convert the netmask to a string
-                    if(inet_ntop(AF_INET, &sockAddrIn->sin_addr, netmaskBuffer, sizeof(netmaskBuffer)) != nullptr) {
-                        interfaceMap[interfaceName].mNetmask = netmaskBuffer;
+                    if(inet_ntop(AF_INET, &pSocketAddressIn->sin_addr, netmaskBuffer,
+                                 sizeof(netmaskBuffer)) != nullptr) {
+                        addressInfo.mNetmask = netmaskBuffer;
                     }
                 }
-                else if(family == AF_INET6) {
-                    const auto *sockAddrIn6 = reinterpret_cast<struct sockaddr_in6*>(pCurrentInterface->ifa_netmask);
-                    if(inet_ntop(AF_INET6, &sockAddrIn6->sin6_addr, netmaskBuffer, sizeof(netmaskBuffer)) != nullptr) {
-                        interfaceMap[interfaceName].mNetmask = netmaskBuffer;
+
+                // Initialize the broadcast address for IPv4 (only if IFF_BROADCAST is set)
+                if(pCurrentInterface->ifa_ifu.ifu_broadaddr && (pCurrentInterface->ifa_flags & IFF_BROADCAST)) {
+                    char broadcastBuffer[INET_ADDRSTRLEN]{};
+                    const auto *pSocketAddressIn =
+                            reinterpret_cast<struct sockaddr_in*>(pCurrentInterface->ifa_ifu.ifu_broadaddr);
+
+                    // Convert the broadcast address to a string
+                    if(inet_ntop(AF_INET, &pSocketAddressIn->sin_addr, broadcastBuffer,
+                                 sizeof(broadcastBuffer)) != nullptr) {
+                        addressInfo.mBroadcastAddress = broadcastBuffer;
                     }
                 }
-            }
+                else {
+                    addressInfo.mBroadcastAddress = AddressInfo::N_A;
+                }
 
-            // Initialize the broadcast address in InterfaceInfo
-            if(pCurrentInterface->ifa_ifu.ifu_broadaddr && pCurrentInterface->ifa_addr->sa_family == AF_INET) {
-                char broadBuffer[INET_ADDRSTRLEN]{};
-                if(inet_ntop(AF_INET,
-                             &reinterpret_cast<sockaddr_in*>(pCurrentInterface->ifa_ifu.ifu_broadaddr)->sin_addr,
-                             broadBuffer, sizeof(broadBuffer)) != nullptr) {
-                    interfaceMap[interfaceName].mBroadcastAddress = broadBuffer;
+                // Initialize the destination address for IPv4 point-to-point interfaces
+                if(pCurrentInterface->ifa_ifu.ifu_dstaddr && (pCurrentInterface->ifa_flags & IFF_POINTOPOINT)) {
+                    char destinationBuffer[INET_ADDRSTRLEN]{};
+                    const auto *pSocketAddressIn =
+                            reinterpret_cast<sockaddr_in*>(pCurrentInterface->ifa_ifu.ifu_dstaddr);
+
+                    if(inet_ntop(AF_INET, &pSocketAddressIn->sin_addr, destinationBuffer,
+                                 sizeof(destinationBuffer)) != nullptr) {
+                        addressInfo.mDestinationAddress = destinationBuffer;
+                    }
+                }
+                else {
+                    addressInfo.mDestinationAddress = AddressInfo::N_A;
                 }
             }
-
-            // Initialize the destination address in InterfaceInfo
-            if(pCurrentInterface->ifa_ifu.ifu_dstaddr && pCurrentInterface->ifa_addr->sa_family == AF_INET) {
-                char destBuffer[INET_ADDRSTRLEN]{};
-                if(inet_ntop(AF_INET,
-                             &reinterpret_cast<sockaddr_in*>(pCurrentInterface->ifa_ifu.ifu_dstaddr)->sin_addr,
-                             destBuffer, sizeof(destBuffer)) != nullptr) {
-                    interfaceMap[interfaceName].mDestinationAddress = destBuffer;
-                }
+            // Proccess IPv6 address
+            else if(addressFamily == AF_INET6) {
+                // Initialize the netmask for IPv6
+                addressInfo.mNetmask = AddressInfo::N_A;
+                addressInfo.mBroadcastAddress = AddressInfo::N_A;
+                addressInfo.mDestinationAddress = AddressInfo::N_A;
             }
-
+            // Skip the first blank address of interface
+            else {
+                continue;
+            }
             // Initialize the flags in InterfaceInfo
-            interfaceMap[interfaceName].mFlags = pCurrentInterface->ifa_flags;
+            interfaceMap[interfaceName].mIpAddresses.emplace_back(addressInfo);
         }
 
         freeifaddrs(pInterfaceAddresses);
 
         // Convert the unordered_map to a vector
-        for(auto &entry : interfaceMap) {
-            activeInterfaces.push_back(entry.second);
+        for(auto &interface : interfaceMap) {
+            activeInterfaces.push_back(interface.second);
         }
 
         return activeInterfaces;
