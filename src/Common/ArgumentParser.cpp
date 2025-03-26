@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      14.03.2025                                                    *
- * Last edit:    22.03.2025                                                    *
+ * Last edit:    26.03.2025                                                    *
  *                                                                             *
  * Description:  Implementation of the ArgumentParser class, which is          *
  *               responsible for parsing command line arguments and options.   *
@@ -32,16 +32,13 @@
 using namespace OmegaL4Scanner::Exceptions;
 using namespace std;
 
-constexpr int PORT_MIN{1};     /**< Minimum valid port number. */
-constexpr int PORT_MAX{65535}; /**< Maximum valid port number. */
-
 namespace OmegaL4Scanner::Common
 {
     CommandLineOptions ArgumentParser::parseArguments(const int argc, char *argv[]) {
         CommandLineOptions options;  // Instance of CommandLineOptions to store parsed arguments
 
         // Create an instance of the CLI11 application
-        CLI::App app{"OMEGA L4 Scanner"};
+        CLI::App app;
 
         // Local variables to store unprocessed inputs (ports, timeout)
         string tcpPortsStr;
@@ -95,40 +92,86 @@ namespace OmegaL4Scanner::Common
     } // ArgumentParser::parseArguments()
 
     void ArgumentParser::setupCliApp(CLI::App &app, CommandLineOptions &options,
-                                     string &tcpPorts, string &udpPorts,
-                                     int &timeout) {
-        app.set_help_flag("-h,--help", "Display help message");
+                                     string &tcpPorts, string &udpPorts, int &timeout) {
+        // General description of the application
+        app.name("OMEGA L4 Scanner v1.0");
+        app.description("OMEGA L4 Scanner is a tool for scanning TCP and UDP ports on a specified network interface "
+                "and target IP address or hostname. It uses raw sockets and the libnet library to send packets "
+                "and analyze responses, determining the status of each port (open, closed, or filtered). OMEGA "
+                "L4 Scanner determines the port status based on ICMP response, when scanning UDP ports, and "
+                "performes TCP SYN (stealth) scan, when scanning TCP ports."
+                );
+
+        // Customize usage message
+        app.usage("   ./ipk-l4-scan [-i interface | --interface interface] [--pu port-ranges | -u port-ranges ]\n"
+                "                 [ -t port-ranges | --pt port-ranges] {-w timeout} [hostname | ip-address]"
+                );
+
+        // Add options
+        app.set_help_flag("-h,--help", "Display this help message and terminate the program with exit code 0");
 
         const auto interfaceOpt =
                 app.add_option("-i,--interface", options.mInterfaceName,
-                               "Network interface to scan through")
+                               "Network interface to scan through. If this parameter is not specified (and no other "
+                               "parameters aswell), or if only -i/--interface is specified without a value, a list of "
+                               "active interfaces is printed. The intervace name is represanted as case-insensitive value.")
                    ->expected(0, 1)
                    ->required(false);
 
         const auto targetOpt =
-                app.add_option("target", options.mTarget,
-                               "Target hostname or IP address")
+                app.add_option("hostname or ip-address", options.mTarget,
+                               "Either hostname (e.g. fit.vutbr.cz) or IP address (IPv4/IPv6) of the scanned device.")
                    ->needs(interfaceOpt)
                    ->required(false);
 
         app.add_option("-t,--pt", tcpPorts,
-                       "Comma-separated TCP ports or port ranges")
+                       "Comma-separated TCP ports or port ranges to scan through. Allowed entries include single ports "
+                       "(e.g. -t 22), port ranges (e.g. -t 1-65535), or a combination of both (e.g. -t 21-25,80). The --pu "
+                       "and --pt arguments can be specified separately, meaning that only TCP or only UDP scanning can "
+                       "be performed.")
            ->needs(interfaceOpt)
            ->needs(targetOpt)
            ->required(false);
 
         app.add_option("-u,--pu", udpPorts,
-                       "Comma-separated UDP ports or port ranges")
+                       "Comma-separated UDP ports or port ranges to scan through. Allowed entries include single ports "
+                       "(e.g. -u 22), port ranges (e.g. -u 1-65535), or a combination of both (e.g. -u 21-25,80). The --pu "
+                       "and --pt arguments can be specified separately, meaning that only TCP or only UDP scanning can "
+                       "be performed.")
            ->needs(interfaceOpt)
            ->needs(targetOpt)
            ->required(false);
 
         app.add_option("-w,--wait", timeout,
-                       "Timeout in milliseconds to wait for a response for a single port scan")
+                       "Timeout in milliseconds to wait for a response for a single port scan. This parameter is optional; "
+                       "if not specified, the default value of 5000 milliseconds (i.e. five seconds) is used.")
            ->needs(interfaceOpt)
            ->needs(targetOpt)
            ->check(CLI::PositiveNumber)
            ->required(false);
+
+        // Footer with example usage and error codes
+        app.footer(
+                "EXAMPLE USAGE:\n"
+                "   ./ipk-l4-scan\n"
+                "   ./ipk-l4-scan -i\n"
+                "   ./ipk-l4-scan --interface\n"
+                "   ./ipk-l4-scan -i eth0 -t 22,80-90,443 -u 53,123-125 -w 1000 localhost\n"
+                "   ./ipk-l4-scan --interface eth0 --pt 80 --pu 21 --wait 1000 www.fit.vutbr.cz\n"
+                "   ./ipk-l4-scan --interface eth0 --pu 53,123-125 192.168.1.1\n"
+                "   ./ipk-l4-scan 2001:67c:1220:809::93e5:917 -t 22,80-90,443 -i eth0\n"
+                "\n\n"
+                "RETURN VALUES:\n"
+                "    0 - The operation completed successfully\n"
+                "   64 - An invalid argument was provided\n"
+                "   66 - Failed to retrieve active network interfaces\n"
+                "   68 - Unable to resolve the hostname\n"
+                "   70 - An internal error occurred\n"
+                "   71 - A socket error occurred\n"
+                "   73 - An error occurred in the Libnet library during network communication\n"
+                "   78 - An unknown error occurred\n"
+                "  130 - The operation was interrupted by the user (i.e. CTRL+C)\n"
+                );
     } // ArgumentParser::setupCliApp()
 
     void ArgumentParser::validateOptions(const CommandLineOptions &options) {

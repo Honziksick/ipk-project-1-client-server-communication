@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      14.03.2025                                                    *
- * Last edit:    22.03.2025                                                    *
+ * Last edit:    26.03.2025                                                    *
  *                                                                             *
  * Description:  Declaration of the ArgumentParser class, which is             *
  *               responsible for parsing command line arguments and options.   *
@@ -50,6 +50,9 @@ namespace OmegaL4Scanner::Common
         static CommandLineOptions parseArguments(int argc, char *argv[]);
 
     private:
+        static constexpr int PORT_MIN{1};     /**< Minimum valid port number. */
+        static constexpr int PORT_MAX{65535}; /**< Maximum valid port number. */
+
         /**
          * @brief Sets up the CLI11 application with the necessary options.
          *
