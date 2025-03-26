@@ -1270,31 +1270,46 @@ CLI11_INLINE std::ostream &streamOutAsParagraph(std::ostream &out,
                                                 std::size_t paragraphWidth,
                                                 const std::string &linePrefix,
                                                 bool skipPrefixOnFirstLine) {
-    if(!skipPrefixOnFirstLine)
-        out << linePrefix;  // First line prefix
+        if(!skipPrefixOnFirstLine)
+            out << linePrefix;  // First line prefix
 
-    std::istringstream lss(text);
-    std::string line = "";
-    while(std::getline(lss, line)) {
-        std::istringstream iss(line);
-        std::string word = "";
-        std::size_t charsWritten = 0;
+        std::istringstream lss(text);
+        std::string line;
+        while(std::getline(lss, line)) {
+            // Preserve leading whitespace
+            size_t firstNonSpace = line.find_first_not_of(' ');
+            std::string leadingSpaces = (firstNonSpace == std::string::npos) ? line : line.substr(0, firstNonSpace);
 
-        while(iss >> word) {
-            if(word.length() + charsWritten > paragraphWidth) {
-                out << '\n' << linePrefix;
-                charsWritten = 0;
+            std::istringstream iss(line);
+            std::string word;
+            std::size_t charsWritten = 0;
+
+            bool firstWord = true;
+            while(iss >> word) {
+                // Handle newline if current word exceeds paragraph width
+                if(!firstWord && (charsWritten + word.length() + 1 > paragraphWidth)) {
+                    out << '\n' << linePrefix;
+                    charsWritten = 0;
+                }
+
+                if(firstWord) {
+                    out << leadingSpaces;
+                    charsWritten += leadingSpaces.size();
+                } else {
+                    out << " ";
+                    charsWritten++;
+                }
+
+                out << word;
+                charsWritten += word.length();
+                firstWord = false;
             }
 
-            out << word << " ";
-            charsWritten += word.length() + 1;
+            if(!lss.eof())
+                out << '\n' << linePrefix;
         }
-
-        if(!lss.eof())
-            out << '\n' << linePrefix;
+        return out;
     }
-    return out;
-}
 
 }  // namespace detail
 
@@ -3600,7 +3615,7 @@ get_names(const std::vector<std::string> &input, bool allow_non_standard) {
             if(!pos_name.empty()) {
                 throw BadNameString::MultiPositionalNames(name);
             }
-            if(valid_name_string(name)) {
+            if(!name.empty()) {
                 pos_name = name;
             } else {
                 throw BadNameString::BadPositionalName(name);
@@ -11153,7 +11168,9 @@ CLI11_INLINE std::string
 Formatter::make_group(std::string group, bool is_positional, std::vector<const Option *> opts) const {
     std::stringstream out;
 
-    out << "\n" << group << ":\n";
+    if(!group.empty()) {
+        out << "\n" << group << ":\n";
+    }
     for(const Option *opt : opts) {
         out << make_option(opt, is_positional);
     }
@@ -11168,7 +11185,8 @@ CLI11_INLINE std::string Formatter::make_positionals(const App *app) const {
     if(opts.empty())
         return {};
 
-    return make_group(get_label("POSITIONALS"), true, opts);
+    //return make_group(get_label("POSITIONALS"), true, opts);
+    return make_group("", false, opts);
 }
 
 CLI11_INLINE std::string Formatter::make_groups(const App *app, AppFormatMode mode) const {
@@ -11293,11 +11311,12 @@ CLI11_INLINE std::string Formatter::make_help(const App *app, std::string name, 
         }
     }
 
-    detail::streamOutAsParagraph(
-        out, make_description(app), description_paragraph_width_, "");  // Format description as paragraph
+    out << app->get_name() << "\n\n";
+    out << "DESCRIPTION:" << "\n";
+    detail::streamOutAsParagraph(out, make_description(app), description_paragraph_width_, "");  // Format description as paragraph
+    out << "\n USAGE:" << std::endl;
     out << make_usage(app, name);
-    out << make_positionals(app);
-    out << make_groups(app, mode);
+    out << make_groups(app, mode) << make_positionals(app);
     out << make_subcommands(app, mode);
     detail::streamOutAsParagraph(out, make_footer(app), footer_paragraph_width_);  // Format footer as paragraph
 
@@ -11480,31 +11499,31 @@ CLI11_INLINE std::string Formatter::make_option_opts(const Option *opt) const {
     if(!opt->get_option_text().empty()) {
         out << " " << opt->get_option_text();
     } else {
-        if(opt->get_type_size() != 0) {
-            if(!opt->get_type_name().empty())
-                out << " " << get_label(opt->get_type_name());
-            if(!opt->get_default_str().empty())
-                out << " [" << opt->get_default_str() << "] ";
-            if(opt->get_expected_max() == detail::expected_max_vector_size)
-                out << " ...";
-            else if(opt->get_expected_min() > 1)
-                out << " x " << opt->get_expected();
-
-            if(opt->get_required())
-                out << " " << get_label("REQUIRED");
-        }
+        // if(opt->get_type_size() != 0) {
+        //     if(!opt->get_type_name().empty())
+        //         out << " " << get_label(opt->get_type_name());
+        //     if(!opt->get_default_str().empty())
+        //         out << " [" << opt->get_default_str() << "] ";
+        //     if(opt->get_expected_max() == detail::expected_max_vector_size)
+        //         out << " ...";
+        //     else if(opt->get_expected_min() > 1)
+        //         out << " x " << opt->get_expected();
+        //
+        //     if(opt->get_required())
+        //         out << " " << get_label("REQUIRED");
+        // }
         if(!opt->get_envname().empty())
             out << " (" << get_label("Env") << ":" << opt->get_envname() << ")";
-        if(!opt->get_needs().empty()) {
-            out << " " << get_label("Needs") << ":";
-            for(const Option *op : opt->get_needs())
-                out << " " << op->get_name();
-        }
-        if(!opt->get_excludes().empty()) {
-            out << " " << get_label("Excludes") << ":";
-            for(const Option *op : opt->get_excludes())
-                out << " " << op->get_name();
-        }
+        // if(!opt->get_needs().empty()) {
+        //     out << " " << get_label("Needs") << ":";
+        //     for(const Option *op : opt->get_needs())
+        //         out << " " << op->get_name();
+        // }
+        // if(!opt->get_excludes().empty()) {
+        //     out << " " << get_label("Excludes") << ":";
+        //     for(const Option *op : opt->get_excludes())
+        //         out << " " << op->get_name();
+        // }
     }
     return out.str();
 }
