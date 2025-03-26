@@ -47,7 +47,6 @@ namespace OmegaL4Scanner::Facades
         scanUdpPorts(ipAddresses);
     } // ScannerController::scanL4Layer()
 
-    // TODO: Uncomment when TCP scanning implementation is implemented
     void ScannerController::scanTcpPorts(const vector<string> &ipAddresses) const {
         if(!mCommandLineOptions.mTcpPorts.empty()) {
             TcpScanner tcpScanner(ipAddresses, mInterfaceInfo, mCommandLineOptions.mWaitTimeout);

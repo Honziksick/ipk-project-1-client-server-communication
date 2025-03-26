@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      21.03.2025                                                    *
- * Last edit:    25.03.2025                                                    *
+ * Last edit:    26.03.2025                                                    *
  *                                                                             *
  * Description:  Implementation of the PortScanner class, which is             *
  *               responsible for scanning network ports.                       *
@@ -78,24 +78,24 @@ namespace OmegaL4Scanner::Scanning
         }
     } // PortScanner::scanPorts()
 
-    int PortScanner::millisecondsToInt(const chrono::milliseconds waitTimeout) {
-        // Clamps long long waitTimeout to integer (truncate overflow)
+    long int PortScanner::millisecondsToLongInt(const chrono::milliseconds waitTimeout) {
+        // Clamps long long waitTimeout to an long integer (truncate overflow)
         const auto clampedValue = clamp(
                 waitTimeout.count(),
-                static_cast<int64_t>(numeric_limits<int>::min()),
-                static_cast<int64_t>(numeric_limits<int>::max())
+                static_cast<int64_t>(numeric_limits<long int>::min()),
+                static_cast<int64_t>(numeric_limits<long int>::max())
                 );
 
         // Check if overflow occurred
         if(clampedValue != waitTimeout.count()) {
             cerr << COLOR_MAGENTA << "Warning: Timeout " << waitTimeout.count() <<
-                    " ms is out of 'int' range and was clamped to " <<
+                    " ms is out of 'long int' range and was clamped to " <<
                     clampedValue << " ms." << RESET << endl;
         }
 
-        // Return the clamped value as an integer
-        return static_cast<int>(clampedValue);
-    } // PortScanner::millisecondsToInt()
+        // Return the clamped value as an long integer
+        return static_cast<long int>(clampedValue);
+    } // PortScanner::millisecondsToLongInt()
 
     string PortScanner::getSourceAddress(const InterfaceInfo &interfaceInfo, const IPAddressVersion ipAddressType) {
         // Select the first IPv4/IPv6 address from the interface
@@ -339,16 +339,16 @@ namespace OmegaL4Scanner::Scanning
         return select(rawSocket + 1, &fileDescriptorSet, nullptr, nullptr, &timeout);
     } // PortScanner::selectSocket()
 
-    PortStatus PortScanner::checkRawResponse(const int rawSocket, const int waitTimeoutMilliseconds,
+    PortStatus PortScanner::checkRawResponse(const int rawSocket, const long int waitTimeoutMilliseconds,
                                              const uint16_t sourcePort, const int destinationPort,
                                              const IPAddressVersion ipAddressVersion,
                                              const ProtocolType &protocolType) {
         // Initialize file descriptor set for select()
-        fd_set fileDescriptorSet;
+        fd_set fileDescriptorSet{};
         initializeFdSet(fileDescriptorSet, rawSocket);
 
         // Set up the timeout for select()
-        timeval timeout;
+        timeval timeout{};
         setTimeval(timeout, waitTimeoutMilliseconds);
 
         // Wait for packet
@@ -365,7 +365,7 @@ namespace OmegaL4Scanner::Scanning
         }
 
         // Prepare buffer for the received packet (maximum size of 256 bytes + 1)
-        array<uint8_t, numeric_limits<uint8_t>::max() + 1> buffer;
+        array<uint8_t, numeric_limits<uint8_t>::max() + 1> buffer{};
 
         // Receive the packet
         const ssize_t bytesReceived = recv(rawSocket, buffer.data(), buffer.size(), 0);

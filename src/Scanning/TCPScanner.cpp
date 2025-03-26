@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      21.03.2025                                                    *
- * Last edit:    25.03.2025                                                    *
+ * Last edit:    26.03.2025                                                    *
  *                                                                             *
  * Description:  This file contains the implementation of the TCPScanner       *
  *               class, which is responsible for scanning TCP ports on         *
@@ -90,7 +90,7 @@ namespace OmegaL4Scanner::Scanning
 
             // Set retransmission parameters
             int attemptCounter = 0;
-            const int waitTimeoutMs = millisecondsToInt(mWaitTimeout);
+            const long int waitTimeoutMs = millisecondsToLongInt(mWaitTimeout);
 
             while(attemptCounter < MAX_TRANSMIT_ATTEMPTS) {
                 // Clear any previous packet from the libnet context

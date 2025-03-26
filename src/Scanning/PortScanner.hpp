@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      21.03.2025                                                    *
- * Last edit:    25.03.2025                                                    *
+ * Last edit:    26.03.2025                                                    *
  *                                                                             *
  * Description:  Declaration of the PortScanner class, which is                *
  *               responsible for scanning network ports.                       *
@@ -99,7 +99,7 @@ namespace OmegaL4Scanner::Scanning
          *
          * @return PortStatus indicating whether the port is open, closed, or filtered.
          */
-        Enums::PortStatus checkRawResponse(int rawSocket, int waitTimeoutMilliseconds,
+        Enums::PortStatus checkRawResponse(int rawSocket, long int waitTimeoutMilliseconds,
                                            uint16_t sourcePort, int destinationPort,
                                            Common::IPAddressVersion ipAddressVersion,
                                            const Common::ProtocolType &protocolType);
@@ -123,13 +123,17 @@ namespace OmegaL4Scanner::Scanning
          * @brief Converts a timeout in milliseconds to an integer.
          *
          * @details This function ensures that the conversion from
-         *          `std::chrono::milliseconds` to `int` does not overflow
-         *          by clamping the value within the range of `int`.
+         *          `std::chrono::milliseconds` to `long int` does not overflow
+         *          by clamping the value within the range of `long int`.
+         *
+         * @note The use of static casts to 'int64_t' may be necessary on some
+         *       platforms as 'long int' may not be 64-bit on them.
          *
          * @param waitTimeout The duration in milliseconds to be converted.
-         * @return int The converted duration as an integer, clamped to the range of `int`.
+         * @return long int The converted duration as an integer, clamped to
+         *         the range of `long int`.
          */
-        static int millisecondsToInt(std::chrono::milliseconds waitTimeout);
+        static long int millisecondsToLongInt(std::chrono::milliseconds waitTimeout);
 
         /**
          * @brief Retrieves the source address from the network interface

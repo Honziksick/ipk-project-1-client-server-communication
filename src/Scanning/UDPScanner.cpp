@@ -8,7 +8,7 @@
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      21.03.2025                                                    *
- * Last edit:    25.03.2025                                                    *
+ * Last edit:    26.03.2025                                                    *
  *                                                                             *
  * Description:  Implementation of the UdpScanner class, which uses the        *
  *               libnet library to construct and send a UDP packet. If an      *
@@ -106,7 +106,7 @@ namespace OmegaL4Scanner::Scanning
                         );
             }
             // Waiting for ICMP response
-            const int waitTimeoutMs = millisecondsToInt(mWaitTimeout);
+            const long int waitTimeoutMs = millisecondsToLongInt(mWaitTimeout);
             portStatus = checkRawResponse(rawSocket, waitTimeoutMs, sourcePort,
                                           portToScan, ipAddressVersion, UDP);
         }
