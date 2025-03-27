@@ -84,7 +84,7 @@ namespace OmegaL4Scanner::Scanning
          */
         Enums::PortStatus determinePortStatus(const uint8_t *pBuffer, ssize_t bytesReceived,
                                               uint16_t destinationPort, uint16_t sourcePort,
-                                              Common::IPAddressVersion ipAddressVersion) override;
+                                              Common::IpAddressVersion ipAddressVersion) override;
 
         /**
          * @brief Constructs the UDP header for the packet using the libnet library.
@@ -94,7 +94,7 @@ namespace OmegaL4Scanner::Scanning
          * @param sourcePort The source port.
          * @param destinationPort The destination port.
          */
-        static void createUdpHeader(libnet_t *pLibnetContext, Common::IPAddressVersion ipAddressVersion,
+        static void createUdpHeader(libnet_t *pLibnetContext, Common::IpAddressVersion ipAddressVersion,
                                     uint16_t sourcePort, uint16_t destinationPort);
     }; // UdpScanner
 } // OmegaL4Scanner::Scanning

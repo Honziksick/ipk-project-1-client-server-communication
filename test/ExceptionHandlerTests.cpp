@@ -4,11 +4,11 @@
  * University:   Faculty of Information Technology, BUT                        *
  * Subject:      IPK: Computer Communications and Networks                     *
  *                                                                             *
- * File:         ErrorHandlerTests.cpp                                         *
+ * File:         ExceptionHandlerTests.cpp                                      *
  * Author:       Jan Kalina <xkalinj00>                                        *
  *                                                                             *
  * Created:      13.03.2025                                                    *
- * Last edit:    24.03.2025                                                    *
+ * Last edit:    27.03.2025                                                    *
  *                                                                             *
  * Description:  This file contains unit tests for the ExceptionHandler class. *
  *               The tests verify that the ExceptionHandler correctly handles  *
@@ -17,9 +17,9 @@
  *                                                                             *
  ******************************************************************************/
 /**
- * @file ErrorHandlerTests.cpp
+ * @file ExceptionHandlerTests.cpp
  * @author Jan Kalina \<xkalinj00>
- * @brief Unit tests for the ErrorHandler class.
+ * @brief Unit tests for the ExceptionHandler class.
  */
 
 #include "Exceptions/OmegaExceptions.hpp"
@@ -37,92 +37,112 @@ using namespace std;
 
 TEST(ErrorHandlerTests, HandleHelpRequestedException) {
     try {
+        // Act
         throw HelpRequestedException("Help me please, good sir.");
     }
     catch(const exception &e) {
+        // Assert
         EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::SUCCESS)), "");
     }
 }
 
 TEST(ErrorHandlerTests, HandleInterfacePrintRequestedException) {
     try {
+        // Act
         throw InterfacePrintRequestedException("This is a request for printing interfaces.");
     }
     catch(const exception &e) {
+        // Assert
         EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::SUCCESS)), "");
     }
 }
 
 TEST(ErrorHandlerTests, HandleInvalidArgumentException) {
     try {
+        // Act
         throw InvalidArgumentException("This is an invalid argument detail.");
     }
     catch(const exception &e) {
+        // Assert
         EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::INVALID_ARGUMENT_ERROR)), "");
     }
 }
 
 TEST(ErrorHandlerTests, HandleInvalidInterfaceException) {
     try {
+        // Act
         throw InterfaceErrorException("This is an invalid interface detail.");
     }
     catch(const exception &e) {
+        // Assert
         EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::INTERFACE_ERROR)), "");
     }
 }
 
 TEST(ErrorHandlerTests, HandleHostnameResolutionException) {
     try {
+        // Act
         throw HostnameResolutionErrorException("This is a hostname resolution error detail.");
     }
     catch(const exception &e) {
+        // Assert
         EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::HOSTNAME_RESOLUTION_ERROR)), "");
     }
 }
 
 TEST(ErrorHandlerTests, HandleSocketException) {
     try {
+        // Act
         throw SocketErrorException("This is a socket error detail.");
     }
     catch(const exception &e) {
+        // Assert
         EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::SOCKET_ERROR)), "");
     }
 }
 
-TEST(ErrorHandlerTests, HandlePcapException) {
+TEST(ErrorHandlerTests, HandleLibnetException) {
     try {
-        throw LibnetErrorException("This is a Pcap error detail.");
+        // Act
+        throw LibnetErrorException("This is a Libnet error detail.");
     }
     catch(const exception &e) {
+        // Assert
         EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::LIBNET_ERROR)), "");
     }
 }
 
 TEST(ErrorHandlerTests, HandleUserInterruptionException) {
     try {
+        // Act
         throw UserInterruptionException("This is a user interruption detail.");
     }
     catch(const exception &e) {
+        // Assert
         EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::USER_INTERRUPTION_ERROR)), "");
     }
 }
 
 TEST(ErrorHandlerTests, HandleInternalErrorException) {
     try {
+        // Act
         throw InternalErrorException("This is an internal error detail.");
     }
     catch(const exception &e) {
+        // Assert
         EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::INTERNAL_ERROR)), "");
     }
 }
 
 TEST(ErrorHandlerTests, HandleUnknownException) {
     try {
+        // Act
         throw runtime_error("This was a runtime error.");
     }
     catch(const exception &e) {
+        // Assert
         EXPECT_EXIT(ExceptionHandler::handleError(e), ExitedWithCode(static_cast<int>(ExitCodes::UNKNOWN_ERROR)), "");
     }
 }
 
-/*** end of file ErrorHandlerTests.cpp ***/
+/*** end of file ExceptionHandlerTests.cpp ***/

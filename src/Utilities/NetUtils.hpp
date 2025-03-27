@@ -49,7 +49,7 @@ namespace OmegaL4Scanner::Utilities
          * @return bool True if the conversion was successful, false otherwise.
          */
         static bool socketaddressToString(const sockaddr *pSocketAddress, int addressFamily,
-                                          char *pAddressBuffer, size_t bufferSize);
+                                          char *pAddressBuffer, socklen_t bufferSize);
     }; // NetUtils
 } // OmegaL4Scanner::Utilities
 

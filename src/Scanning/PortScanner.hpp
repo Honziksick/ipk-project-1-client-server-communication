@@ -101,7 +101,7 @@ namespace OmegaL4Scanner::Scanning
          */
         Enums::PortStatus checkRawResponse(int rawSocket, int waitTimeoutMilliseconds,
                                            uint16_t sourcePort, uint16_t destinationPort,
-                                           Common::IPAddressVersion ipAddressVersion,
+                                           Common::IpAddressVersion ipAddressVersion,
                                            const Common::ProtocolType &protocolType);
 
         /**
@@ -117,7 +117,7 @@ namespace OmegaL4Scanner::Scanning
          */
         virtual Enums::PortStatus determinePortStatus(const uint8_t *pBuffer, ssize_t bytesReceived,
                                                       uint16_t destinationPort, uint16_t sourcePort,
-                                                      Common::IPAddressVersion ipAddressVersion) = 0;
+                                                      Common::IpAddressVersion ipAddressVersion) = 0;
 
         /**
          * @brief Converts a timeout in milliseconds to an integer.
@@ -145,7 +145,7 @@ namespace OmegaL4Scanner::Scanning
          * @return std::string The source address as a string.
          */
         static std::string getSourceAddress(const Networking::InterfaceInfo &interfaceInfo,
-                                            Common::IPAddressVersion ipAddressType);
+                                            Common::IpAddressVersion ipAddressType);
 
         /**
          * @brief Determines the IP address version (IPv4 or IPv6) of the given
@@ -154,7 +154,7 @@ namespace OmegaL4Scanner::Scanning
          * @param ipAddress The IP address as a string to be analyzed.
          * @return Common::IPAddressVersion The version of the IP address (IPv4 or IPv6).
          */
-        static Common::IPAddressVersion getIpAddressVersion(const std::string &ipAddress);
+        static Common::IpAddressVersion getIpAddressVersion(const std::string &ipAddress);
 
         /**
          * @brief Configures the specified socket to operate in non-blocking mode.
@@ -172,7 +172,7 @@ namespace OmegaL4Scanner::Scanning
          * @return Pointer to the initialized libnet context.
          */
         static libnet_t *initLibnetContext(const Networking::InterfaceInfo &interfaceInfo,
-                                           Common::IPAddressVersion ipAddressVersion);
+                                           Common::IpAddressVersion ipAddressVersion);
 
         /**
          * @brief Creates a raw socket.
@@ -182,7 +182,7 @@ namespace OmegaL4Scanner::Scanning
          *
          * @return The file descriptor of the created raw socket.
          */
-        static int createRawSocket(Common::IPAddressVersion ipAddressVersion,
+        static int createRawSocket(Common::IpAddressVersion ipAddressVersion,
                                    const Common::ProtocolType &protocolType);
 
         /**
@@ -218,7 +218,7 @@ namespace OmegaL4Scanner::Scanning
          * @param ipAddressToScan The target IP address to scan.
          * @param protocolType The protocol type (TCP or UDP).
          */
-        static void createIpHeader(libnet_t *pLibnetContext, Common::IPAddressVersion ipAddressVersion,
+        static void createIpHeader(libnet_t *pLibnetContext, Common::IpAddressVersion ipAddressVersion,
                                    const Networking::InterfaceInfo &interfaceInfo,
                                    const std::string &ipAddressToScan, const Common::ProtocolType &protocolType);
 

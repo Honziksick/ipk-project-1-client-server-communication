@@ -64,7 +64,7 @@ namespace OmegaL4Scanner::Scanning
 
     ScanResult UdpScanner::scanPort(const string &ipAddressToScan, const uint16_t portToScan) {
         // Determine if we are scanning an IPv4/IPv6 address
-        const IPAddressVersion ipAddressVersion = getIpAddressVersion(ipAddressToScan);
+        const IpAddressVersion ipAddressVersion = getIpAddressVersion(ipAddressToScan);
 
         // Initialize libnet context
         libnet_t *pLibnetContext = initLibnetContext(mInterfaceInfo, ipAddressVersion);
@@ -126,7 +126,7 @@ namespace OmegaL4Scanner::Scanning
 
     PortStatus UdpScanner::determinePortStatus(const uint8_t *pBuffer, const ssize_t bytesReceived,
                                                const uint16_t destinationPort, const uint16_t sourcePort,
-                                               const IPAddressVersion ipAddressVersion) {
+                                               const IpAddressVersion ipAddressVersion) {
         // For IPv4
         if(ipAddressVersion == IPv4) {
             // If the received bytes are less than the minimum required for 'IPv4 + ICMP + UDP header' => port OPEN
@@ -208,7 +208,7 @@ namespace OmegaL4Scanner::Scanning
         return PortStatus::OPEN;
     } // UdpScanner::determinePortStatus()
 
-    void UdpScanner::createUdpHeader(libnet_t *pLibnetContext, const IPAddressVersion ipAddressVersion,
+    void UdpScanner::createUdpHeader(libnet_t *pLibnetContext, const IpAddressVersion ipAddressVersion,
                                      const uint16_t sourcePort, const uint16_t destinationPort) {
         // Build the UDP header using libnet
         const libnet_ptag_t udpTag = libnet_build_udp(

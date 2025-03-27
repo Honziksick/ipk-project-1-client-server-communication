@@ -87,7 +87,7 @@ namespace OmegaL4Scanner::Scanning
          */
         Enums::PortStatus determinePortStatus(const uint8_t *pBuffer, ssize_t bytesReceived,
                                               uint16_t destinationPort, uint16_t sourcePort,
-                                              Common::IPAddressVersion ipAddressVersion) override;
+                                              Common::IpAddressVersion ipAddressVersion) override;
 
         /**
          * @brief Constructs the TCP header for the packet using the libnet library.

@@ -28,7 +28,6 @@
 #include <string>     // std::string
 #include <vector>     // std::vector<T>
 #include <chrono>     // std::chrono::milliseconds
-#include <cstdint>    // uint16_t
 #include "CLI11.hpp"  /* CLI11 je header-only library for command-line parsing
                          Source: https://github.com/CLIUtils/CLI11 */
 

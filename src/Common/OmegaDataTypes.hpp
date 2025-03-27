@@ -57,7 +57,7 @@ namespace OmegaL4Scanner::Common
      *          - `true` represents an IPv6 address.
      *          - `false` represents an IPv4 address.
      */
-    using IPAddressVersion = bool;
+    using IpAddressVersion = bool;
 } // OmegaL4Scanner::Common
 
 #endif //OMEGA_DATA_TYPES_HPP

@@ -62,6 +62,7 @@ namespace OmegaL4Scanner::Scanning
          *
          * @return std::string A string representation of the scan result.
          */
+        [[nodiscard]]
         std::string scanResultToString() const;
     }; // ScanResult
 } // OmegaL4Scanner::Scanning

@@ -27,8 +27,8 @@
 
 namespace OmegaL4Scanner::Constants
 {
-    inline const Common::IPAddressVersion IPv4 = true;     /**< Constant for IPv4 address type. */
-    inline const Common::IPAddressVersion IPv6 = false;    /**< Constant for IPv6 address type. */
+    inline constexpr Common::IpAddressVersion IPv4 = true;     /**< Constant for IPv4 address type. */
+    inline constexpr Common::IpAddressVersion IPv6 = false;    /**< Constant for IPv6 address type. */
 } // OmegaL4Scanner::Constants
 
 #endif // IP_ADDRESS_VERSION_HPP

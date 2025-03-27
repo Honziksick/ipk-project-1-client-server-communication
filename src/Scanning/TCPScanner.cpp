@@ -63,7 +63,7 @@ namespace OmegaL4Scanner::Scanning
 
     ScanResult TcpScanner::scanPort(const string &ipAddressToScan, const uint16_t portToScan) {
         // Determine if we are scanning an IPv6 address
-        const IPAddressVersion ipAddressVersion = getIpAddressVersion(ipAddressToScan);
+        const IpAddressVersion ipAddressVersion = getIpAddressVersion(ipAddressToScan);
 
         // Initialize libnet context
         libnet_t *pLibnetContext = initLibnetContext(mInterfaceInfo, ipAddressVersion);
@@ -139,7 +139,7 @@ namespace OmegaL4Scanner::Scanning
 
     PortStatus TcpScanner::determinePortStatus(const uint8_t *pBuffer, const ssize_t bytesReceived,
                                                const uint16_t destinationPort, const uint16_t sourcePort,
-                                               const IPAddressVersion ipAddressVersion) {
+                                               const IpAddressVersion ipAddressVersion) {
         // prepare variable for IP header length
         size_t ipHeaderLength{0};
 

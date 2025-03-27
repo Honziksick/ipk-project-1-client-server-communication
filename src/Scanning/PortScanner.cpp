@@ -97,7 +97,7 @@ namespace OmegaL4Scanner::Scanning
         return static_cast<int>(clampedValue);
     } // PortScanner::millisecondsToInt()
 
-    string PortScanner::getSourceAddress(const InterfaceInfo &interfaceInfo, const IPAddressVersion ipAddressType) {
+    string PortScanner::getSourceAddress(const InterfaceInfo &interfaceInfo, const IpAddressVersion ipAddressType) {
         // Select the first IPv4/IPv6 address from the interface
         for(const auto &ipAddress : interfaceInfo.mIpAddresses) {
             if(ipAddressType == IPv4) {
@@ -116,7 +116,7 @@ namespace OmegaL4Scanner::Scanning
         throw InternalErrorException("Interface does not contain any " + ipVersionStr + " address.");
     } // PortScanner::getSourceAddress()
 
-    IPAddressVersion PortScanner::getIpAddressVersion(const string &ipAddress) {
+    IpAddressVersion PortScanner::getIpAddressVersion(const string &ipAddress) {
         return (ipAddress.find(':') != string::npos) ? IPv6 : IPv4;
     } // PortScanner::getIpAddressType()
 
@@ -137,7 +137,7 @@ namespace OmegaL4Scanner::Scanning
         }
     } // PortScanner::useNonBlockingMode()
 
-    libnet_t *PortScanner::initLibnetContext(const InterfaceInfo &interfaceInfo, const IPAddressVersion ipAddressVersion) {
+    libnet_t *PortScanner::initLibnetContext(const InterfaceInfo &interfaceInfo, const IpAddressVersion ipAddressVersion) {
         // Set the injection type based on IP version
         const int injectionType = (ipAddressVersion == IPv4) ? LIBNET_RAW4 : LIBNET_RAW6;
 
@@ -158,7 +158,7 @@ namespace OmegaL4Scanner::Scanning
         return pLibnetContext;
     } // PortScanner::initLibnetContext()
 
-    int PortScanner::createRawSocket(const IPAddressVersion ipAddressVersion, const ProtocolType &protocolType) {
+    int PortScanner::createRawSocket(const IpAddressVersion ipAddressVersion, const ProtocolType &protocolType) {
         // Determine the socket domain based on IP version
         const int domain = (ipAddressVersion == IPv4) ? AF_INET : AF_INET6;
 
@@ -259,7 +259,7 @@ namespace OmegaL4Scanner::Scanning
         }
     } // PortScanner::createIpv6Header()
 
-    void PortScanner::createIpHeader(libnet_t *pLibnetContext, const IPAddressVersion ipAddressVersion,
+    void PortScanner::createIpHeader(libnet_t *pLibnetContext, const IpAddressVersion ipAddressVersion,
                                      const InterfaceInfo &interfaceInfo, const string &ipAddressToScan,
                                      const ProtocolType &protocolType) {
         // Check if the protocol type is valid (UDP or TCP)
@@ -341,7 +341,7 @@ namespace OmegaL4Scanner::Scanning
 
     PortStatus PortScanner::checkRawResponse(const int rawSocket, const int waitTimeoutMilliseconds,
                                              const uint16_t sourcePort, const uint16_t destinationPort,
-                                             const IPAddressVersion ipAddressVersion,
+                                             const IpAddressVersion ipAddressVersion,
                                              const ProtocolType &protocolType) {
         // Initialize file descriptor set for select()
         fd_set fileDescriptorSet{};

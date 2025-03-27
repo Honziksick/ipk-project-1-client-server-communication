@@ -30,20 +30,19 @@ using namespace OmegaL4Scanner::Exceptions;
 namespace OmegaL4Scanner::Utilities
 {
     bool NetUtils::socketaddressToString(const sockaddr *pSocketAddress, const int addressFamily,
-                                         char *pAddressBuffer, const size_t bufferSize) {
+                                         char *pAddressBuffer, const socklen_t bufferSize) {
         if(!pSocketAddress || !pAddressBuffer) {
             throw SocketErrorException("Invalid socket address or address buffer");
-            return false;
         }
 
         // Get the IP address based on the address family
         const void *pIpaddress;
         if(addressFamily == AF_INET) {
-            const sockaddr_in *pSocketIn = reinterpret_cast<const sockaddr_in*>(pSocketAddress);
+            const auto pSocketIn = reinterpret_cast<const sockaddr_in*>(pSocketAddress);
             pIpaddress = static_cast<const void*>(&pSocketIn->sin_addr);
         }
         else {
-            const sockaddr_in6 *pSocketIn = reinterpret_cast<const sockaddr_in6*>(pSocketAddress);
+            const auto pSocketIn = reinterpret_cast<const sockaddr_in6*>(pSocketAddress);
             pIpaddress = static_cast<const void*>(&pSocketIn->sin6_addr);
         }
 
@@ -51,7 +50,6 @@ namespace OmegaL4Scanner::Utilities
             throw InternalErrorException(
                     "Failed to retrieve IP address from socket address"
                     );
-            return false;
         }
 
         return inet_ntop(addressFamily, pIpaddress, pAddressBuffer, bufferSize) != nullptr;
