@@ -58,44 +58,44 @@ namespace OmegaL4Scanner::Scanning
 
     void PortScanner::scanPorts(const vector<PortRange> &portRanges) {
         for(const auto &portVariant : portRanges) {
-            int rangeStart{0};
-            int rangeEnd{0};
+            uint16_t rangeStart{0};
+            uint16_t rangeEnd{0};
 
-            if(holds_alternative<int>(portVariant)) {
-                rangeStart = rangeEnd = get<int>(portVariant);
+            if(holds_alternative<uint16_t>(portVariant)) {
+                rangeStart = rangeEnd = get<uint16_t>(portVariant);
             }
             else {
-                auto [start, end] = get<pair<int, int>>(portVariant);
+                auto [start, end] = get<pair<uint16_t, uint16_t>>(portVariant);
                 rangeStart = start;
                 rangeEnd = end;
             }
 
             for(const auto &ipAddress : mIpaddressesToScan) {
-                for(int iPort = rangeStart; iPort <= rangeEnd; iPort++) {
+                for(uint16_t iPort = rangeStart; iPort <= rangeEnd; iPort++) {
                     cout << scanPort(ipAddress, iPort).scanResultToString() << endl;
                 }
             }
         }
     } // PortScanner::scanPorts()
 
-    long int PortScanner::millisecondsToLongInt(const chrono::milliseconds waitTimeout) {
-        // Clamps long long waitTimeout to an long integer (truncate overflow)
+    int PortScanner::millisecondsToInt(const chrono::milliseconds waitTimeout) {
+        // Clamps long long waitTimeout to an integer (truncate overflow)
         const auto clampedValue = clamp(
                 waitTimeout.count(),
-                static_cast<int64_t>(numeric_limits<long int>::min()),
-                static_cast<int64_t>(numeric_limits<long int>::max())
+                static_cast<int64_t>(numeric_limits<int>::min()),
+                static_cast<int64_t>(numeric_limits<int>::max())
                 );
 
         // Check if overflow occurred
         if(clampedValue != waitTimeout.count()) {
             cerr << COLOR_MAGENTA << "Warning: Timeout " << waitTimeout.count() <<
-                    " ms is out of 'long int' range and was clamped to " <<
+                    " ms is out of 'int' range and was clamped to " <<
                     clampedValue << " ms." << RESET << endl;
         }
 
-        // Return the clamped value as an long integer
-        return static_cast<long int>(clampedValue);
-    } // PortScanner::millisecondsToLongInt()
+        // Return the clamped value as an integer
+        return static_cast<int>(clampedValue);
+    } // PortScanner::millisecondsToInt()
 
     string PortScanner::getSourceAddress(const InterfaceInfo &interfaceInfo, const IPAddressVersion ipAddressType) {
         // Select the first IPv4/IPv6 address from the interface
@@ -339,8 +339,8 @@ namespace OmegaL4Scanner::Scanning
         return select(rawSocket + 1, &fileDescriptorSet, nullptr, nullptr, &timeout);
     } // PortScanner::selectSocket()
 
-    PortStatus PortScanner::checkRawResponse(const int rawSocket, const long int waitTimeoutMilliseconds,
-                                             const uint16_t sourcePort, const int destinationPort,
+    PortStatus PortScanner::checkRawResponse(const int rawSocket, const int waitTimeoutMilliseconds,
+                                             const uint16_t sourcePort, const uint16_t destinationPort,
                                              const IPAddressVersion ipAddressVersion,
                                              const ProtocolType &protocolType) {
         // Initialize file descriptor set for select()

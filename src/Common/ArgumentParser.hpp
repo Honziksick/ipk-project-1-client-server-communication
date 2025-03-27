@@ -28,6 +28,7 @@
 #include <string>     // std::string
 #include <vector>     // std::vector<T>
 #include <chrono>     // std::chrono::milliseconds
+#include <cstdint>    // uint16_t
 #include "CLI11.hpp"  /* CLI11 je header-only library for command-line parsing
                          Source: https://github.com/CLIUtils/CLI11 */
 
@@ -50,8 +51,8 @@ namespace OmegaL4Scanner::Common
         static CommandLineOptions parseArguments(int argc, char *argv[]);
 
     private:
-        static constexpr int PORT_MIN{1};     /**< Minimum valid port number. */
-        static constexpr int PORT_MAX{65535}; /**< Maximum valid port number. */
+        static constexpr uint16_t PORT_MIN{1};     /**< Minimum valid port number. */
+        static constexpr uint16_t PORT_MAX{65535}; /**< Maximum valid port number. */
 
         /**
          * @brief Sets up the CLI11 application with the necessary options.
@@ -144,13 +145,13 @@ namespace OmegaL4Scanner::Common
          *
          * @details This function takes a vector of port ranges, where each port
          *          range can be either a single port (int) or a range of ports
-         *          (std::pair<int, int>). It converts all items to intervals,
+         *          (std::pair<uint16_t, uint16_t>). It converts all items to intervals,
          *          sorts them, merges adjacent or overlapping intervals, and
          *          converts them back to the original format.
          *
          * @param portRanges A vector of PortRange, where each PortRange is
          *                   either an int representing a single port or a
-         *                   std::pair<int, int> representing a range of ports.
+         *                   std::pair<uint16_t, uint16_t> representing a range of ports.
          * @return std::vector<PortRange> A vector of merged and sorted PortRange.
          */
         static std::vector<PortRange> mergeAndSortPortRanges(const std::vector<PortRange> &portRanges);

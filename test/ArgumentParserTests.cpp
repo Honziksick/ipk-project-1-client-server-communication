@@ -65,11 +65,11 @@ vector<char*> createArgv(const vector<string> &args) {
  * @brief Retrieves the port range from a PortRange variant.
  *
  * @param portPair A reference to a PortRange variant containing a port range.
- * @return pair<int, int> A reference to a pair of integers representing the
+ * @return pair<uint16_t, uint16_t> A reference to a pair of integers representing the
  *         port range.
  */
-inline pair<int, int> &getPortRange(PortRange &portPair) {
-    return get<pair<int, int>>(portPair);
+inline pair<uint16_t, uint16_t> &getPortRange(PortRange &portPair) {
+    return get<pair<uint16_t, uint16_t>>(portPair);
 }
 
 /**
@@ -79,7 +79,7 @@ inline pair<int, int> &getPortRange(PortRange &portPair) {
  * @return int An integer representing the port.
  */
 inline int getPort(const PortRange &port) {
-    return get<int>(port);
+    return get<uint16_t>(port);
 }
 
 

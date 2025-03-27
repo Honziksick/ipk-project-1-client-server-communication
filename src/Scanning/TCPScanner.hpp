@@ -61,7 +61,7 @@ namespace OmegaL4Scanner::Scanning
          * @param portToScan The port number to scan.
          * @return ScanResult The result of the port scan.
          */
-        ScanResult scanPort(const std::string &ipAddressToScan, int portToScan) override;
+        ScanResult scanPort(const std::string &ipAddressToScan, uint16_t portToScan) override;
 
     private:
         static constexpr int MAX_TRANSMIT_ATTEMPTS = 2;  /**< Maximum number of SYN packet transmit attempts. */
@@ -86,7 +86,7 @@ namespace OmegaL4Scanner::Scanning
          *         RST received, or PortStatus::FILTERED if the packet is invalid.
          */
         Enums::PortStatus determinePortStatus(const uint8_t *pBuffer, ssize_t bytesReceived,
-                                              int destinationPort, uint16_t sourcePort,
+                                              uint16_t destinationPort, uint16_t sourcePort,
                                               Common::IPAddressVersion ipAddressVersion) override;
 
         /**
@@ -96,11 +96,9 @@ namespace OmegaL4Scanner::Scanning
          * @param sourcePort The source port.
          * @param destinationPort The destination port.
          * @param sequenceNumber The sequence number.
-         *
-         * @return libnet_ptag_t The protocol tag.
          */
         static void createTcpHeader(libnet_t *pLibnetContext, uint16_t sourcePort,
-                                    int destinationPort, uint32_t sequenceNumber);
+                                    uint16_t destinationPort, uint32_t sequenceNumber);
     }; // TcpScanner
 } // OmegaL4Scanner::Scanning
 

@@ -82,7 +82,7 @@ namespace OmegaL4Scanner::Common
         options.mTcpPorts = parsePortRange(tcpPortsStr);
         options.mUdpPorts = parsePortRange(udpPortsStr);
 
-        // Convert the timeout value to milliseconds if it's set
+        // Convert the timeout value to milliseconds if it is set
         if(timeout >= 0) {
             options.mWaitTimeout = convertIntToMilliseconds(timeout);
         }
@@ -104,7 +104,7 @@ namespace OmegaL4Scanner::Common
 
         // Customize usage message
         app.usage("   ./ipk-l4-scan [-i interface | --interface interface] [--pu port-ranges | -u port-ranges ]\n"
-                "                 [ -t port-ranges | --pt port-ranges] {-w timeout} [hostname | ip-address]"
+                "                 [ -t port-ranges | --pt port-ranges] {-w timeout | --wait timeout} [hostname | ip-address]"
                 );
 
         // Add options
@@ -120,13 +120,13 @@ namespace OmegaL4Scanner::Common
 
         const auto targetOpt =
                 app.add_option("hostname or ip-address", options.mTarget,
-                               "Either hostname (e.g. fit.vutbr.cz) or IP address (IPv4/IPv6) of the scanned device.")
+                               "Either hostname (e.g. vutbr.cz) or IP address (IPv4/IPv6) of the scanned device.")
                    ->needs(interfaceOpt)
                    ->required(false);
 
         app.add_option("-t,--pt", tcpPorts,
                        "Comma-separated TCP ports or port ranges to scan through. Allowed entries include single ports "
-                       "(e.g. -t 22), port ranges (e.g. -t 1-65535), or a combination of both (e.g. -t 21-25,80). The --pu "
+                       "(e.g., -t 22), port ranges (e.g., -t 1–65535), or a combination of both (e.g., -t 21–25,80). The --pu "
                        "and --pt arguments can be specified separately, meaning that only TCP or only UDP scanning can "
                        "be performed.")
            ->needs(interfaceOpt)
@@ -135,7 +135,7 @@ namespace OmegaL4Scanner::Common
 
         app.add_option("-u,--pu", udpPorts,
                        "Comma-separated UDP ports or port ranges to scan through. Allowed entries include single ports "
-                       "(e.g. -u 22), port ranges (e.g. -u 1-65535), or a combination of both (e.g. -u 21-25,80). The --pu "
+                       "(e.g., -u 22), port ranges (e.g., -u 1–65535), or a combination of both (e.g., -u 21–25,80). The --pu "
                        "and --pt arguments can be specified separately, meaning that only TCP or only UDP scanning can "
                        "be performed.")
            ->needs(interfaceOpt)
@@ -144,7 +144,7 @@ namespace OmegaL4Scanner::Common
 
         app.add_option("-w,--wait", timeout,
                        "Timeout in milliseconds to wait for a response for a single port scan. This parameter is optional; "
-                       "if not specified, the default value of 5000 milliseconds (i.e. five seconds) is used.")
+                       "if not specified, the default value of 5000 milliseconds (i.e., five seconds) is used.")
            ->needs(interfaceOpt)
            ->needs(targetOpt)
            ->check(CLI::PositiveNumber)
@@ -162,15 +162,15 @@ namespace OmegaL4Scanner::Common
                 "   ./ipk-l4-scan 2001:67c:1220:809::93e5:917 -t 22,80-90,443 -i eth0\n"
                 "\n\n"
                 "RETURN VALUES:\n"
-                "    0 - The operation completed successfully\n"
-                "   64 - An invalid argument was provided\n"
-                "   66 - Failed to retrieve active network interfaces\n"
-                "   68 - Unable to resolve the hostname\n"
-                "   70 - An internal error occurred\n"
-                "   71 - A socket error occurred\n"
-                "   73 - An error occurred in the Libnet library during network communication\n"
-                "   78 - An unknown error occurred\n"
-                "  130 - The operation was interrupted by the user (i.e. CTRL+C)\n"
+                "    0 – The operation completed successfully\n"
+                "   64 – An invalid argument was provided\n"
+                "   66 – Failed to retrieve active network interfaces\n"
+                "   68 – Unable to resolve the hostname\n"
+                "   70 – An internal error occurred\n"
+                "   71 – A socket error occurred\n"
+                "   73 – An error occurred in the Libnet library during network communication\n"
+                "   78 – An unknown error occurred\n"
+                "  130 – The operation was interrupted by the user (i.e. CTRL+C)\n"
                 );
     } // ArgumentParser::setupCliApp()
 
@@ -229,9 +229,9 @@ namespace OmegaL4Scanner::Common
             }
             // If the substring represents a single port
             else {
-                int singlePort;
+                uint16_t singlePort;
                 try {
-                    singlePort = stoi(substring);
+                    singlePort = static_cast<uint16_t>(stoi(substring));
                 }
                 catch(const invalid_argument &e) {
                     throw InvalidArgumentException("Invalid port number: " + string(e.what()));
@@ -314,21 +314,21 @@ namespace OmegaL4Scanner::Common
     } // ArgumentParser::validateInterfaceName()
 
     vector<PortRange> ArgumentParser::mergeAndSortPortRanges(const vector<PortRange> &portRanges) {
-        vector<pair<int, int>> intervals;       // Vector for intervals (pair<int, int>)
-        intervals.reserve(portRanges.size()); // Memory reservation for better performance
-        vector<pair<int, int>> merged;          // Vector for merged intervals
-        vector<PortRange> result;               // vector for intervals converted back to PortRange
+        vector<pair<uint16_t, uint16_t>> intervals;  // Vector for intervals (pair<uint16_t, uint16_t>)
+        intervals.reserve(portRanges.size());        // Memory reservation for better performance
+        vector<pair<uint16_t, uint16_t>> merged;     // Vector for merged intervals
+        vector<PortRange> result;                    // vector for intervals converted back to PortRange
 
-        // First we need to convert all items to intervals (pair<int, int>)
+        // First we need to convert all items to intervals (pair<uint16_t, uint16_t>)
         for(const auto &range : portRanges) {
-            // If the range is an int, convert it to an interval (port, port)
-            if(holds_alternative<int>(range)) {
-                int port = get<int>(range);
+            // If the range is an uint16_t, convert it to an interval (port, port)
+            if(holds_alternative<uint16_t>(range)) {
+                uint16_t port = get<uint16_t>(range);
                 intervals.emplace_back(port, port);
             }
-            // Else the range is a pair<int, int>, so we can add it directly
+            // Else the range is a pair<uint16_t, uint16_t>, so we can add it directly
             else {
-                intervals.emplace_back(get<pair<int, int>>(range));
+                intervals.emplace_back(get<pair<uint16_t, uint16_t>>(range));
             }
         }
 

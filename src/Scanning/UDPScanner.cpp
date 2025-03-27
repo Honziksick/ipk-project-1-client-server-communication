@@ -62,7 +62,7 @@ namespace OmegaL4Scanner::Scanning
                            const chrono::milliseconds waitTimeout)
         : PortScanner(ipAddressesToScan, interfaceInfo, waitTimeout) {}
 
-    ScanResult UdpScanner::scanPort(const string &ipAddressToScan, const int portToScan) {
+    ScanResult UdpScanner::scanPort(const string &ipAddressToScan, const uint16_t portToScan) {
         // Determine if we are scanning an IPv4/IPv6 address
         const IPAddressVersion ipAddressVersion = getIpAddressVersion(ipAddressToScan);
 
@@ -106,7 +106,7 @@ namespace OmegaL4Scanner::Scanning
                         );
             }
             // Waiting for ICMP response
-            const long int waitTimeoutMs = millisecondsToLongInt(mWaitTimeout);
+            const int waitTimeoutMs = millisecondsToInt(mWaitTimeout);
             portStatus = checkRawResponse(rawSocket, waitTimeoutMs, sourcePort,
                                           portToScan, ipAddressVersion, UDP);
         }
@@ -125,7 +125,7 @@ namespace OmegaL4Scanner::Scanning
     } // UdpScanner::scanPort()
 
     PortStatus UdpScanner::determinePortStatus(const uint8_t *pBuffer, const ssize_t bytesReceived,
-                                               const int destinationPort, const uint16_t sourcePort,
+                                               const uint16_t destinationPort, const uint16_t sourcePort,
                                                const IPAddressVersion ipAddressVersion) {
         // For IPv4
         if(ipAddressVersion == IPv4) {
@@ -162,7 +162,7 @@ namespace OmegaL4Scanner::Scanning
                 const uint16_t originalSourcePort = ntohs(originalUdpHeader->uh_sport);
 
                 // If the original destination and source ports match the given ports => port CLOSED
-                if(originalDestinationPort == static_cast<uint16_t>(destinationPort) &&
+                if(originalDestinationPort == destinationPort &&
                     originalSourcePort == sourcePort) {
                     return PortStatus::CLOSED;
                 }
@@ -209,7 +209,7 @@ namespace OmegaL4Scanner::Scanning
     } // UdpScanner::determinePortStatus()
 
     void UdpScanner::createUdpHeader(libnet_t *pLibnetContext, const IPAddressVersion ipAddressVersion,
-                                     const uint16_t sourcePort, const int destinationPort) {
+                                     const uint16_t sourcePort, const uint16_t destinationPort) {
         // Build the UDP header using libnet
         const libnet_ptag_t udpTag = libnet_build_udp(
                 sourcePort,       // source port

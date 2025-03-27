@@ -61,7 +61,7 @@ namespace OmegaL4Scanner::Scanning
                            const chrono::milliseconds waitTimeout)
         : PortScanner(ipaddressesToScan, interfaceInfo, waitTimeout) {}
 
-    ScanResult TcpScanner::scanPort(const string &ipAddressToScan, const int portToScan) {
+    ScanResult TcpScanner::scanPort(const string &ipAddressToScan, const uint16_t portToScan) {
         // Determine if we are scanning an IPv6 address
         const IPAddressVersion ipAddressVersion = getIpAddressVersion(ipAddressToScan);
 
@@ -90,7 +90,7 @@ namespace OmegaL4Scanner::Scanning
 
             // Set retransmission parameters
             int attemptCounter = 0;
-            const long int waitTimeoutMs = millisecondsToLongInt(mWaitTimeout);
+            const int waitTimeoutMs = millisecondsToInt(mWaitTimeout);
 
             while(attemptCounter < MAX_TRANSMIT_ATTEMPTS) {
                 // Clear any previous packet from the libnet context
@@ -138,7 +138,7 @@ namespace OmegaL4Scanner::Scanning
     } // TcpScanner::scanPort()
 
     PortStatus TcpScanner::determinePortStatus(const uint8_t *pBuffer, const ssize_t bytesReceived,
-                                               const int destinationPort, const uint16_t sourcePort,
+                                               const uint16_t destinationPort, const uint16_t sourcePort,
                                                const IPAddressVersion ipAddressVersion) {
         // prepare variable for IP header length
         size_t ipHeaderLength{0};
@@ -211,7 +211,7 @@ namespace OmegaL4Scanner::Scanning
     } // TcpScanner::determinePortStatus()
 
     void TcpScanner::createTcpHeader(libnet_t *pLibnetContext, const uint16_t sourcePort,
-                                     const int destinationPort, const uint32_t sequenceNumber) {
+                                     const uint16_t destinationPort, const uint32_t sequenceNumber) {
         // Build the TCP header using libnet
         const libnet_ptag_t tcpTag = libnet_build_tcp(
                 sourcePort,         // Source port

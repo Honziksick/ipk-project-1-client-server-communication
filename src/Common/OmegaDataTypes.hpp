@@ -26,16 +26,17 @@
 #include <string>   // std::string
 #include <variant>  // std::variant<T...>
 #include <utility>  // std::pair<T1,T2>
+#include <cstdint>  // uint16_t
 
 namespace OmegaL4Scanner::Common
 {
     /**
      * @brief Type definition for port number or port range.
      *
-     * @details This type can represent either a single port (int),
-     *          or a range of ports (std::pair<int, int>).
+     * @details This type can represent either a single port (uint16_t),
+     *          or a range of ports (std::pair<uint16_t, uint16_t>).
      */
-    using PortRange = std::variant<int, std::pair<int, int>>;
+    using PortRange = std::variant<uint16_t, std::pair<uint16_t, uint16_t>>;
 
     /**
      * @brief Alias for std::string representation of protocol types.

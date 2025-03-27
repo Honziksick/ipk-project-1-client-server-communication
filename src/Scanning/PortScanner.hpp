@@ -66,7 +66,7 @@ namespace OmegaL4Scanner::Scanning
          * @details Expands the port ranges into individual ports and calls
          *          scanPort() on each.
          *
-         * @param portRanges Vector of port ranges (each can be int or pair<int,int>).
+         * @param portRanges Vector of port ranges (each can be int or pair<uint16_t, uint16_t>).
          */
         void scanPorts(const std::vector<Common::PortRange> &portRanges);
 
@@ -82,7 +82,7 @@ namespace OmegaL4Scanner::Scanning
          * @param portToScan The port number to scan.
          * @return ScanResult The result of the port scan.
          */
-        virtual ScanResult scanPort(const std::string &ipAddressToScan, int portToScan) = 0;
+        virtual ScanResult scanPort(const std::string &ipAddressToScan, uint16_t portToScan) = 0;
 
         /**
          * @brief Checks for a response on a raw socket.
@@ -99,8 +99,8 @@ namespace OmegaL4Scanner::Scanning
          *
          * @return PortStatus indicating whether the port is open, closed, or filtered.
          */
-        Enums::PortStatus checkRawResponse(int rawSocket, long int waitTimeoutMilliseconds,
-                                           uint16_t sourcePort, int destinationPort,
+        Enums::PortStatus checkRawResponse(int rawSocket, int waitTimeoutMilliseconds,
+                                           uint16_t sourcePort, uint16_t destinationPort,
                                            Common::IPAddressVersion ipAddressVersion,
                                            const Common::ProtocolType &protocolType);
 
@@ -116,24 +116,21 @@ namespace OmegaL4Scanner::Scanning
          * @return Enums::PortStatus indicating whether the port is open, closed, or filtered.
          */
         virtual Enums::PortStatus determinePortStatus(const uint8_t *pBuffer, ssize_t bytesReceived,
-                                                      int destinationPort, uint16_t sourcePort,
+                                                      uint16_t destinationPort, uint16_t sourcePort,
                                                       Common::IPAddressVersion ipAddressVersion) = 0;
 
         /**
          * @brief Converts a timeout in milliseconds to an integer.
          *
          * @details This function ensures that the conversion from
-         *          `std::chrono::milliseconds` to `long int` does not overflow
-         *          by clamping the value within the range of `long int`.
-         *
-         * @note The use of static casts to 'int64_t' may be necessary on some
-         *       platforms as 'long int' may not be 64-bit on them.
+         *          `std::chrono::milliseconds` to `int` does not overflow
+         *          by clamping the value within the range of `int`.
          *
          * @param waitTimeout The duration in milliseconds to be converted.
-         * @return long int The converted duration as an integer, clamped to
-         *         the range of `long int`.
+         * @return int The converted duration as an integer, clamped to the
+         *         range of `int`.
          */
-        static long int millisecondsToLongInt(std::chrono::milliseconds waitTimeout);
+        static int millisecondsToInt(std::chrono::milliseconds waitTimeout);
 
         /**
          * @brief Retrieves the source address from the network interface

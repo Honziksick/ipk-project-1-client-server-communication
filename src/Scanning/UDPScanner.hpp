@@ -67,7 +67,7 @@ namespace OmegaL4Scanner::Scanning
          *
          * @return ScanResult The result of the port scan.
          */
-        ScanResult scanPort(const std::string &ipAddressToScan, int portToScan) override;
+        ScanResult scanPort(const std::string &ipAddressToScan, std::uint16_t portToScan) override;
 
     private:
         /**
@@ -83,7 +83,7 @@ namespace OmegaL4Scanner::Scanning
          *         PortStatus::OPEN otherwise.
          */
         Enums::PortStatus determinePortStatus(const uint8_t *pBuffer, ssize_t bytesReceived,
-                                              int destinationPort, uint16_t sourcePort,
+                                              uint16_t destinationPort, uint16_t sourcePort,
                                               Common::IPAddressVersion ipAddressVersion) override;
 
         /**
@@ -93,11 +93,9 @@ namespace OmegaL4Scanner::Scanning
          * @param ipAddressVersion Whether the address is IPv6.
          * @param sourcePort The source port.
          * @param destinationPort The destination port.
-         *
-         * @return The protocol tag value of the UDP header.
          */
         static void createUdpHeader(libnet_t *pLibnetContext, Common::IPAddressVersion ipAddressVersion,
-                                    uint16_t sourcePort, int destinationPort);
+                                    uint16_t sourcePort, uint16_t destinationPort);
     }; // UdpScanner
 } // OmegaL4Scanner::Scanning
 
