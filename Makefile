@@ -65,6 +65,8 @@ SRC_DIR = src
 
 # Directories for placing built files
 BUILD_DIR = build
+RELEASE_BUILD_DIR = build/release
+DEBUG_BUILD_DIR = build/debug
 
 # Path to the directory with tests
 TEST_DIR = test
@@ -89,16 +91,23 @@ ARCHIVE_DIR = $(PACK_DIR)/$(PACK_NAME)
 ###           ###
 
 CXX = g++
-CXXFLAGS = -std=c++20 -O3
+CXX_STD =-std=c++20
+WARNING_FLAGS = -Wall -Wextra -Werror -pedantic -Wshadow -Wconversion -pthread
+DEBUG_FLAGS = -g
+SANITIZE_FLAGS = -fsanitize=address -fsanitize=undefined
+
+CXXFLAGS = $(CXX_STD) -O3
+CXXFLAGS_DEBUG = $(CXX_STD) $(DEBUG_FLAGS) $(WARNING_FLAGS) $(SANITIZE_FLAGS)
 
 
 ###                  ###
 #  Source & Libraries  #
 ###                  ###
 
-INCLUDES = -Isrc
-LIBS = -lpcap -lnet
-IPK_LIB = build/libipk-l4-scan.a
+INCLUDES = -I$(SRC_DIR)
+LIBS = -lnet
+IPK_LIB = libipk-l4-scan.a
+IPK_LIB_DEBUG = libipk-l4-scan-debug.a
 
 
 ###                     ###
@@ -106,12 +115,14 @@ IPK_LIB = build/libipk-l4-scan.a
 ###                     ###
 
 # For 'ipk-l4-scan-lib.a'
-LIB_SRCS := $(shell find src -type f -name "*.cpp" | grep -v "src/App/main.cpp")
-LIB_OBJS := $(patsubst src/%, build/%, $(LIB_SRCS:.cpp=.o))
+LIB_SRCS := $(shell find $(SRC_DIR) -type f -name "*.cpp" | grep -v "$(SRC_DIR)/App/main.cpp")
+LIB_OBJS := $(patsubst $(SRC_DIR)/%, $(RELEASE_BUILD_DIR)/%, $(LIB_SRCS:.cpp=.o))
+LIB_OBJS_DEBUG := $(patsubst $(SRC_DIR)/%, $(DEBUG_BUILD_DIR)/%, $(LIB_SRCS:.cpp=.o))
 
 # For 'ipk-l4-scan'
-MAIN_SRC = src/App/main.cpp
-MAIN_OBJ = $(patsubst src/%, build/%, $(MAIN_SRC:.cpp=.o))
+MAIN_SRC = $(SRC_DIR)/App/main.cpp
+MAIN_OBJ = $(patsubst $(SRC_DIR)/%, $(RELEASE_BUILD_DIR)/%, $(MAIN_SRC:.cpp=.o))
+MAIN_OBJ_DEBUG = $(patsubst $(SRC_DIR)/%, $(DEBUG_BUILD_DIR)/%, $(MAIN_SRC:.cpp=.o))
 
 
 ################################################################################
@@ -121,14 +132,15 @@ MAIN_OBJ = $(patsubst src/%, build/%, $(MAIN_SRC:.cpp=.o))
 ################################################################################
 
 # The '.PHONY' command indicates that the following commands are never considered as files
-.PHONY: all build run help clean doc pack clean-all clean-build clean-exec clean-doc \
-        clean-pack pack-prepare install-dev-dep install-help-dep install-doc-dep \
-        install-pack-dep update-dep
+.PHONY: all build clean debug doc help pack run test clean-all clean-build clean-debug-exec \
+        clean-exec clean-doc clean-pack test-argument-parser test-exception-handler \
+		test-interface-manager test-omega-exceptions pack-prepare install-dev-dep \
+		install-help-dep install-doc-dep install-pack-dep update-dep
 
-### MC # all: # Performs the build of the entire compiler intended for deployment
+### MC # all: # Builds the 'ipk-l4-scanner'
 all: build
 
-### MC # build: # Builds the compiler for the "Team xkalinj00"
+### MC # build: # Builds the 'ipk-l4-scanner' via CMake in developer version and Make in submission version
 ifndef DISABLE_TARGETS
 build:
 	@cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
@@ -137,12 +149,26 @@ else
 build: $(EXECUTABLE)
 endif
 
-### MC # run: Runs the executable with print help argument
+### MC # run: # Runs the executable with print help argument
 run:
 	@if [ ! -f "$(EXECUTABLE)" ]; then \
 		$(MAKE) build; \
 	fi
 	./$(EXECUTABLE) -h
+
+### MC # test: # Builds and runs the test executable 'ipk-l4-scan-test' (not allowed for submission)
+ifndef DISABLE_TARGETS
+test:
+	@cmake -S . -B build -DCMAKE_BUILD_TYPE=Test
+	@cmake --build build --config Test --target ipk-l4-scan-test
+	./$(TEST_BIN_DIR)/ipk-l4-scan-test
+else
+test:
+	@echo "$(COLOR_RED)The 'test' target is disabled for project submission.$(COLOR_RESET)"
+endif
+
+### MC # debug: # Builds the application in debug mode with more strict warnings
+debug: $(EXECUTABLE)-debug
 
 # Definition of shortcuts for command categories
 CATEGORIES := MC C T P DEV
@@ -177,20 +203,23 @@ endif
 	done; \
 	} | less -R
 
-### MC # clean: # Runs 'clean-all' in developer mode od 'clean-build' + 'clean-doc' in submission mode
+### MC # clean: # Runs 'clean-all' in developer / submission mode (different versions)
 ifndef DISABLE_TARGETS
 clean: clean-all
 else
-clean: clean-build clean-test clean-doc
+clean: clean-build clean-test clean-doc clean-debug-exec
 endif
 
-### MC # doc: # Generates project documentation into the `doc` directory
+### MC # doc: # Generates project documentation into the `doc` directory (different versions)
 ifndef DISABLE_TARGETS
 doc:
 	@$(MAKE) $(SILENTOPT) install-doc-dep
 	$(MAKE) $(SILENTOPT) clean-doc
 	doxygen Doxyfile
 	cd $(DOC_DIR)/html && grep -v 'target="_self">resources\|target="_self">doc' files.html > temp.html && mv temp.html files.html
+	@sed -i 's/\&lt;tt\&gt;/<tt>/g; s/\&lt;\/tt\&gt;/<\/tt>/g' $(DOC_DIR)/html/index.html
+	@sed -i '/\&lt;style\&gt; .smallcaps { font-variant: small-caps; } \&lt;\/style\&gt;/d' $(DOC_DIR)/html/index.html
+	@sed -i '/README.md/d' $(DOC_DIR)/doxygen_warnings.log
 	@echo '<html><head><meta http-equiv="refresh" content="0; url=html/index.html"></head></html>' > $(DOC_DIR)/documentation.html
 	@echo -e "$(COLOR_YELLOW)Do you want to open the HTML documentation in the main system browser? (y/n): $(COLOR_RESET)"
 	@bash -c 'read -t 5 -p "" choice; \
@@ -205,14 +234,17 @@ else
 doc:
 	$(MAKE) $(SILENTOPT) clean-doc
 	doxygen Doxyfile
+	@sed -i 's/\&lt;tt\&gt;/<tt>/g; s/\&lt;\/tt\&gt;/<\/tt>/g' $(DOC_DIR)/html/index.html
+	@sed -i '/\&lt;style\&gt; .smallcaps { font-variant: small-caps; } \&lt;\/style\&gt;/d' $(DOC_DIR)/html/index.html
+	@sed -i '/README.md/d' $(DOC_DIR)/doxygen_warnings.log
 	@echo '<html><head><meta http-equiv="refresh" content="0; url=./html/index.html"></head></html>' > $(DOC_DIR)/documentation.html
 endif
 
-### MC # pack: # Creates a ZIP archive with files intended for submission
+### MC # pack: # Creates a ZIP archive with files intended for submission (not allowed for submission)
 ifndef DISABLE_TARGETS
 pack:
 	@$(MAKE) $(SILENTOPT) install-pack-dep
-	$(MAKE) $(SILENTOPT) clean-pack
+	$(MAKE) $(SILENTOPT) clean
 	mkdir -p $(PACK_DIR)
 	$(MAKE) $(SILENTOPT) pack-prepare
 	@echo ""
@@ -224,25 +256,52 @@ endif
 
 ################################################################################
 #                                                                              #
-#                        SPECIALIZED 'BUILD' COMMANDS                          #
+#                                BUILD TARGETS                                 #
 #                                                                              #
 ################################################################################
 
+###                                                                          ###
+#                      COMPILATION OF RELEASE APP VERSION                      #
+###                                                                          ###
+
 # Build static library 'libipk-l4-scan.a'
-$(IPK_LIB): $(LIB_OBJS)
-	@echo "Creating static library '$(IPK_LIB)'..."
-	ar rcs $(IPK_LIB) $(LIB_OBJS)
+$(RELEASE_BUILD_DIR)/$(IPK_LIB): $(LIB_OBJS)
+	@mkdir -p $(RELEASE_BUILD_DIR)
+	@echo "$(COLOR_MAGENTA)Creating static library '$(RELEASE_BUILD_DIR)/$(IPK_LIB)'...$(COLOR_RESET)"
+	ar rcs $(RELEASE_BUILD_DIR)/$(IPK_LIB) $(LIB_OBJS)
 
 # Build the excecutable 'ipk-l4-scan'
-$(EXECUTABLE): $(MAIN_OBJ) $(IPK_LIB)
-	@echo "Linking executable '$(EXECUTABLE)'..."
-	$(CXX) $(CXXFLAGS) -o $(EXECUTABLE) $(MAIN_OBJ) -Lbuild -lipk-l4-scan $(LIBS)
+$(EXECUTABLE): $(MAIN_OBJ) $(RELEASE_BUILD_DIR)/$(IPK_LIB)
+	@echo "$(COLOR_MAGENTA)Linking executable '$(EXECUTABLE)'...$(COLOR_RESET)"
+	$(CXX) $(CXXFLAGS) -o $(EXECUTABLE) $(MAIN_OBJ) -L$(RELEASE_BUILD_DIR) -lipk-l4-scan $(LIBS)
 
 # Compile all object files into the 'build' directory
-build/%.o: src/%.cpp
+$(RELEASE_BUILD_DIR)/%.o: src/%.cpp
 	@mkdir -p $(dir $@)
-	@echo "Compiling $<..."
+	@echo "$(COLOR_MAGENTA)Compiling $<...$(COLOR_RESET)"
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+
+###                                                                          ###
+#                       COMPILATION OF DEBUG APP VERSION                       #
+###                                                                          ###
+
+# Build static library 'libipk-l4-scan-debug.a'
+$(DEBUG_BUILD_DIR)/$(IPK_LIB_DEBUG): $(LIB_OBJS_DEBUG)
+	@mkdir -p $(DEBUG_BUILD_DIR)
+	@echo "$(COLOR_MAGENTA)Creating static library '$(DEBUG_BUILD_DIR)/$(IPK_LIB_DEBUG)' for debug...$(COLOR_RESET)"
+	ar rcs $(DEBUG_BUILD_DIR)/$(IPK_LIB_DEBUG) $(LIB_OBJS_DEBUG)
+
+# Build the executable 'ipk-l4-scan-debug'
+$(EXECUTABLE)-debug: $(MAIN_OBJ_DEBUG) $(DEBUG_BUILD_DIR)/$(IPK_LIB_DEBUG)
+	@echo "$(COLOR_MAGENTA)Linking executable '$(EXECUTABLE)-debug' for debug...$(COLOR_RESET)"
+	$(CXX) $(CXXFLAGS_DEBUG) -o $(EXECUTABLE)-debug $(MAIN_OBJ_DEBUG) -L$(DEBUG_BUILD_DIR) -lipk-l4-scan-debug $(LIBS)
+
+# Compile all object files into the 'build' directory
+$(DEBUG_BUILD_DIR)/%.o: src/%.cpp
+	@mkdir -p $(dir $@)
+	@echo "$(COLOR_MAGENTA)Compiling $< for debug...$(COLOR_RESET)"
+	$(CXX) $(CXXFLAGS_DEBUG) $(INCLUDES) -c $< -o $@
 
 
 ################################################################################
@@ -252,7 +311,7 @@ build/%.o: src/%.cpp
 ################################################################################
 
 ### C # clean-all: # Removes all created files (build, doc, executable, archive, ...)
-clean-all: clean-build clean-exec clean-test clean-doc clean-pack
+clean-all: clean-build clean-exec clean-test clean-doc clean-pack clean-debug-exec
 
 ### C # clean-build: # Removes the 'build' directory
 clean-build:
@@ -262,6 +321,10 @@ clean-build:
 clean-exec:
 	rm -f $(EXECUTABLE)
 
+### C # clean-debug-exec: # Removes the debug executable
+clean-debug-exec:
+	rm -f $(EXECUTABLE)-debug
+
 ### C # clean-test: # Removes 'test/bin' folder with test executables
 clean-test:
 	rm -rf $(TEST_BIN_DIR)
@@ -270,7 +333,7 @@ clean-test:
 clean-doc:
 	find $(DOC_DIR) -mindepth 1 ! -path '$(DOC_DIR)/resources*' ! -path '$(DOC_DIR)/raw*' -delete || true
 
-### C # clean-pack: # Removes the 'pack' directory (including the archive)
+### C # clean-pack: # Removes the 'pack' directory including the archive (not allowed for submission)
 ifndef DISABLE_TARGETS
 clean-pack:
 	rm -rf $(PACK_DIR)
@@ -286,29 +349,29 @@ endif
 #                                                                              #
 ################################################################################
 
-### T # test-exceptions: # Builds and runs the 'OmegaExceptions' test
+### T # test-omega-exceptions: # Builds and runs the 'OmegaExceptions' test (not allowed for submission)
 ifndef DISABLE_TARGETS
-test-exceptions:
+test-omega-exceptions:
 	@cmake -S . -B build -DCMAKE_BUILD_TYPE=Test
 	@cmake --build build --config Test --target OmegaExceptionsTests
 	./$(TEST_BIN_DIR)/OmegaExceptionsTests
 else
-test-exceptions:
-	@echo "$(COLOR_RED)The 'test-exceptions' target is disabled for project submission.$(COLOR_RESET)"
+test-omega-exceptions:
+	@echo "$(COLOR_RED)The 'test-omega-exceptions' target is disabled for project submission.$(COLOR_RESET)"
 endif
 
-### T # test-error-handler: # Builds and runs the 'ErrorHandler' test
+### T # test-exception-handler: # Builds and runs the 'ExceptionHandler' test (not allowed for submission)
 ifndef DISABLE_TARGETS
-test-error-handler:
+test-exception-handler:
 	@cmake -S . -B build -DCMAKE_BUILD_TYPE=Test
-	@cmake --build build --config Test --target ErrorHandlerTests
-	./$(TEST_BIN_DIR)/ErrorHandlerTests
+	@cmake --build build --config Test --target ExceptionHandlerTests
+	./$(TEST_BIN_DIR)/ExceptionHandlerTests
 else
-test-error-handler:
-	@echo "$(COLOR_RED)The 'test-error-handler' target is disabled for project submission.$(COLOR_RESET)"
+test-exception-handler:
+	@echo "$(COLOR_RED)The 'test-exception-handler' target is disabled for project submission.$(COLOR_RESET)"
 endif
 
-### T # test-argument-parser: # Builds and runs the 'ArgumentParser' test
+### T # test-argument-parser: # Builds and runs the 'ArgumentParser' test (not allowed for submission)
 ifndef DISABLE_TARGETS
 test-argument-parser:
 	@cmake -S . -B build -DCMAKE_BUILD_TYPE=Test
@@ -319,7 +382,7 @@ test-argument-parser:
 	@echo "$(COLOR_RED)The 'test-argument-parser' target is disabled for project submission.$(COLOR_RESET)"
 endif
 
-### T # test-interface-manager: # Builds and runs the 'InterfaceManager' test
+### T # test-interface-manager: # Builds and runs the 'InterfaceManager' test (not allowed for submission)
 ifndef DISABLE_TARGETS
 test-interface-manager:
 	@cmake -S . -B build -DCMAKE_BUILD_TYPE=Test
@@ -337,7 +400,7 @@ endif
 #                                                                              #
 ################################################################################
 
-### P # pack-prepare: # Copies all necessary files to the 'pack/xkalinj00' directory
+### P # pack-prepare: # Copies all necessary files to the 'pack/xkalinj00' directory (not allowed for submission)
 ifndef DISABLE_TARGETS
 pack-prepare:
 	@{ \
@@ -355,10 +418,15 @@ pack-prepare:
 			echo "$(COLOR_RED)\nError: The directory "$(SRC_DIR)" does not exist.$(COLOR_RESET)"; \
 		fi; \
 		if [ -d "$(TEST_DIR)" ]; then \
-			rsync -av $(TEST_DIR)/*.cpp $(ARCHIVE_DIR)/; \
-		else \
+			rsync -a --include '*.cpp' --include '*.hpp' --exclude '*/' $(TEST_DIR)/ $(ARCHIVE_DIR)/$(TEST_DIR)/; \
 		else \
 			echo "$(COLOR_RED)\nError: The directory "$(TEST_DIR)" does not exist.$(COLOR_RESET)"; \
+		fi; \
+		if [ -d "$(DOC_DIR)/resources" ]; then \
+			mkdir -p $(ARCHIVE_DIR)/$(DOC_DIR)/resources; \
+			rsync -a $(DOC_DIR)/resources/ $(ARCHIVE_DIR)/$(DOC_DIR)/resources/; \
+		else \
+			echo "$(COLOR_RED)\nError: The directory "$(DOC_DIR)/resources" does not exist.$(COLOR_RESET)"; \
 		fi; \
 		if [ -f "Makefile" ]; then \
 			rsync -a Makefile $(ARCHIVE_DIR)/; \
@@ -425,7 +493,7 @@ endif
 #                                                                              #
 ################################################################################
 
-### DEV # install-dev-dep: # Installs dependencies needed for using all 'Makefile' functions
+### DEV # install-dev-dep: # Installs dependencies needed for using all 'Makefile' functions (not allowed for submission)
 ifndef DISABLE_TARGETS
 install-dev-dep: update-dep install-help-dep install-doc-dep install-pack-dep
 else
@@ -433,7 +501,7 @@ install-dev-dep:
 	@echo "$(COLOR_RED)The 'install-dev-dep' target is disabled for project submission.$(COLOR_RESET)"
 endif
 
-### DEV # install-help-dep: # Installs dependencies needed for printing 'Makefile' help
+### DEV # install-help-dep: # Installs dependencies needed for printing 'Makefile' help (not allowed for submission)
 ifndef DISABLE_TARGETS
 install-help-dep:
 	@dpkg -s less >/dev/null 2>&1 || (echo "Installing less" && sudo apt-get install less)
@@ -442,7 +510,7 @@ install-help-dep:
 	@echo "$(COLOR_RED)The 'install-help-dep' target is disabled for project submission.$(COLOR_RESET)"
 endif
 
-### DEV # install-doc-dep: # Installs dependencies needed for generating documentation
+### DEV # install-doc-dep: # Installs dependencies needed for generating documentation (not allowed for submission)
 ifndef DISABLE_TARGETS
 install-doc-dep:
 	@dpkg -s doxygen >/dev/null 2>&1 || (echo "Installing doxygen" && sudo apt-get install doxygen)
@@ -451,7 +519,7 @@ install-doc-dep:
 	@echo "$(COLOR_RED)The 'install-doc-dep' target is disabled for project submission.$(COLOR_RESET)"
 endif
 
-### DEV # install-pack-dep: # Installs dependencies needed for project packaging
+### DEV # install-pack-dep: # Installs dependencies needed for project packaging (not allowed for submission)
 ifndef DISABLE_TARGETS
 install-pack-dep:
 	@dpkg -s rsync >/dev/null 2>&1 || (echo "Installing rsync" && sudo apt-get install rsync)
@@ -461,13 +529,13 @@ install-pack-dep:
 	@echo "$(COLOR_RED)The 'install-pack-dep' target is disabled for project submission.$(COLOR_RESET)"
 endif
 
-### DEV # update-dep: # Updates the list of available packages
+### DEV # update-dep: # Updates the list of available packages (not allowed for submission)
 ifndef DISABLE_TARGETS
 update-dep:
 	sudo apt-get update -y
 else
 update-dep:
-	@echo "$(COLOR_RED)The 'dev-update-dep' target is disabled for project submission.$(COLOR_RESET)"
+	@echo "$(COLOR_RED)The 'update-dep' target is disabled for project submission.$(COLOR_RESET)"
 endif
 
 ### end of file Makefile ###

@@ -144,20 +144,20 @@ endforeach()
 #  Build combined test executable  #
 ###                              ###
 
-add_executable(ipk-l4-tests ${TEST_SOURCES})
-target_link_libraries(ipk-l4-tests
+add_executable(ipk-l4-scan-test ${TEST_SOURCES})
+target_link_libraries(ipk-l4-scan-test
                       PRIVATE
                       ipk-l4-scan-lib
                       gtest
                       gtest_main
                       )
-target_link_options(ipk-l4-tests PRIVATE
+target_link_options(ipk-l4-scan-test PRIVATE
                     -Wl,--wrap=getifaddrs
                     -Wl,--wrap=freeifaddrs
                     )
-set_target_properties(ipk-l4-tests PROPERTIES
+set_target_properties(ipk-l4-scan-test PROPERTIES
                       RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test/bin"
                       )
-add_test(NAME ipk-l4-tests COMMAND ipk-l4-tests)
+add_test(NAME ipk-l4-scan-test COMMAND ipk-l4-scan-test)
 
 ### end of file CMakeLists.txt ###
