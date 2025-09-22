@@ -1,14 +1,15 @@
 ### Personal
 **/ipk-l4-**
-sandbox/
+**/sandbox
 **/doc/*
-!**/doc/resources/
-**/raw/
-**/build/
-**/pack/
-**/test/bin/
+!**/doc/resources
+**/raw
+**/build
+**/pack
+**/test/bin
 **/test/googletest-library
-**/devenv/*
+**/devenv
+**/*.zip
 
 ### C++ template
 # Prerequisites

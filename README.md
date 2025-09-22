@@ -65,7 +65,7 @@
 - [8. Přílohy](#8-přílohy)
   - [8.1 Adresářový strom projektu](#81-adresářový-strom-projektu)
   - [8.2 Výstup příkazu `make help`](#82-výstup-příkazu-make-help)
-    - [8.3 Výsledky unit testů](#83-výsledky-unit-testů)
+  - [8.3 Výsledky unit testů](#83-výsledky-unit-testů)
 
 ---
 

@@ -43,7 +43,7 @@ namespace OmegaL4Scanner::Networking
 
         hints.ai_family = AF_UNSPEC; // get both IPv4 and IPv6 addresses
         hints.ai_socktype = 0;       // any socket type (TCP/UDP)
-        hints.ai_flags = 0;          //get only real IPs
+        hints.ai_flags = 0;          // get only real IPs
 
         // Perform the address resolution
         addrinfo *pResult{nullptr};
