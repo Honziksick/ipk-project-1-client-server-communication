@@ -14,6 +14,7 @@
 ## Obsah
 
 - [Obsah](#obsah)
+- [Hodnocení](#hodnocení)
 - [1. Úvod](#1-úvod)
 - [2. Teoretický základ a účel aplikace](#2-teoretický-základ-a-účel-aplikace)
 - [3. Sestavení a spuštění programu](#3-sestavení-a-spuštění-programu)
@@ -66,6 +67,76 @@
   - [8.1 Adresářový strom projektu](#81-adresářový-strom-projektu)
   - [8.2 Výstup příkazu `make help`](#82-výstup-příkazu-make-help)
   - [8.3 Výsledky unit testů](#83-výsledky-unit-testů)
+
+---
+
+## Hodnocení
+
+**Hodnocení:** 9.27/10.00 b.
+
+- **Implementace:** 5.27/6.00 b.
+- **Dokumentace:** 3.00/3.00 b.
+- **Git:** 1.00/1.00 b.
+
+```plaintext
+--Implementace--
+tests/test_smoke.py::test_mandatory_project_structure_case_sensitive (SingleHostNotCompiled): passed
+tests/test_smoke.py::test_makefile_exists_case_insensitive (SingleHostNotCompiled): passed
+tests/test_smoke.py::test_makefile_check_harmful_commands (SingleHostNotCompiled): passed
+tests/test_smoke.py::test_compilation_make (SingleHostNotCompiled): passed
+tests/test_lan.py::test_lan_tcp_handshake_allowed (LAN): passed
+tests/test_lan.py::test_lan_tcp_handshake_allowed_short_port_arg (LAN): passed
+tests/test_lan.py::test_lan[IPv4-single open TCP port] (LAN): passed
+tests/test_lan.py::test_lan[IPv4-single closed TCP port] (LAN): passed
+tests/test_lan.py::test_lan[IPv4-sequence of 2 closed TCP ports] (LAN): passed
+tests/test_lan.py::test_lan[IPv4-sequence of 2 open and closed TCP ports] (LAN): passed
+tests/test_lan.py::test_lan[IPv4-sequence of 2 open TCP ports] (LAN): passed
+tests/test_lan.py::test_lan[IPv4-range of 3 open and closed TCP ports] (LAN): passed
+tests/test_lan.py::test_lan[IPv4-single open UDP port] (LAN): passed
+tests/test_lan.py::test_lan[IPv4-single closed UDP port] (LAN): passed
+tests/test_lan.py::test_lan[IPv4-sequence of 2 closed UDP ports] (LAN): passed
+tests/test_lan.py::test_lan[IPv4-sequence of 2 open and closed UDP ports] (LAN): passed
+tests/test_lan.py::test_lan[IPv4-sequence of 2 open UDP ports] (LAN): passed
+tests/test_lan.py::test_lan[IPv4-range of 3 open and closed UDP ports] (LAN): passed
+tests/test_lan.py::test_lan[IPv4-range of 3 open and closed TCP ports, sequence of 2 open and closed UDP ports] (LAN): passed
+tests/test_lan.py::test_lan[IPv6-single open UDP port] (LAN): passed
+tests/test_lan.py::test_lan[IPv6-single closed UDP port] (LAN): failed
+tests/test_lan.py::test_lan[IPv6-sequence of 2 closed UDP ports] (LAN): failed
+tests/test_lan.py::test_lan[IPv6-sequence of 2 open and closed UDP ports] (LAN): failed
+tests/test_lan.py::test_lan[IPv6-sequence of 2 open UDP ports] (LAN): passed
+tests/test_lan.py::test_lan[IPv6-range of 3 open and closed UDP ports] (LAN): failed
+tests/test_args.py::test_arg_interface (LAN): passed
+tests/test_args.py::test_arg_help (LAN): passed
+tests/test_internet.py::test_dns_invalid (LAN): passed
+tests/test_localhost.py::test_tcp[127.0.0.1 single open TCP port] (LAN): passed
+tests/test_localhost.py::test_tcp[localhost single open TCP port] (LAN): passed
+tests/test_lan.py::test_lan[IPv6-single open TCP port] (LAN): passed
+tests/test_lan.py::test_lan[IPv6-single closed TCP port] (LAN): passed
+tests/test_lan.py::test_lan[IPv6-sequence of 2 closed TCP ports] (LAN): passed
+tests/test_lan.py::test_lan[IPv6-sequence of 2 open and closed TCP ports] (LAN): passed
+tests/test_lan.py::test_lan[IPv6-sequence of 2 open TCP ports] (LAN): passed
+tests/test_lan.py::test_lan[IPv6-range of 3 open and closed TCP ports] (LAN): passed
+tests/test_lan.py::test_lan[IPv6-range of 3 open and closed TCP ports, sequence of 2 open and closed UDP ports] (LAN): failed
+tests/test_lan.py::test_timeout_long (LAN): passed
+tests/test_lan.py::test_timeout_short (LAN): passed
+tests/test_internet.py::test_dns_a_aaaa_multiple (LAN): passed
+tests/test_internet.py::test_dns_a_aaaa_single (LAN): passed
+note:
+penalty coefficient: 1
+penalty description:
+git history (max 0.5): 0.5
+git content (max 0.5): 0.5
+points override:
+points final (max 7): 6.27
+
+--Dokumentace--
+Úprava/Formátování/Rozsah (0,5b): 0.50
+Vysvětlení problematiky/Motivace (0,75b): 0.75
+Popis implementace (0,75b): 0.75
+Testování (1b): 1.00
+Celkem: 3.00
+Komentář: Pěkné, až přehnané. 
+```
 
 ---
 
